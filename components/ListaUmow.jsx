@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 
 const ListaUmow = () => {
-  const router = useRouter();
   const [selectedRows, setSelectedRows] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-  const [editRow, setEditRow] = useState(null);
-  const [editedData, setEditedData] = useState({});
 
   const initialData = [
     {
@@ -24,7 +20,7 @@ const ListaUmow = () => {
       dataPodpisania: '2025-05-07',
       handlowiec: 'Marcin Test',
       sprzedaneProdukty: ['Klimatyzacje'],
-      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono dostępность sprzętu.',
+      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono dostępność sprzętu.',
       status: 'Sprawdzona',
     },
     {
@@ -33,7 +29,7 @@ const ListaUmow = () => {
       dataPodpisania: '2025-05-06',
       handlowiec: 'Katarzyna Nowak',
       sprzedaneProdukty: ['Magazyn Energii', 'Inne'],
-      opisUmowyBOK: 'Klientka wybrała magazyn energii do domu jednorodzinnego, dodatkowe uwagi dotyczące instalacji.',
+      opisUmowyBOK: 'Klientka wybrała magazyn energii do domu jednorodzinnego, dodatkowe uwagi dotyczące установки.',
       status: 'Zlecona do realizacji',
     },
     {
@@ -70,29 +66,6 @@ const ListaUmow = () => {
     setData(sortedData);
   };
 
-  const handleEdit = (row) => {
-    setEditRow(row.id);
-    setEditedData({ ...row });
-  };
-
-  const handleSave = () => {
-    setData((prev) =>
-      prev.map((item) => (item.id === editRow ? { ...item, ...editedData } : item))
-    );
-    setEditRow(null);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleStatusChange = (id, status) => {
-    setData((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status } : item))
-    );
-  };
-
   const truncateText = (text, maxLength) => {
     if (!text) return '';
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -101,15 +74,6 @@ const ListaUmow = () => {
   return (
     <div className="lista-umow">
       <h2>Lista Umów</h2>
-      <div className="table-actions">
-        <button
-          className="action-button"
-          onClick={() => router.push('/utworz-umowe')}
-          disabled={selectedRows.length === 0}
-        >
-          Edytuj wybrane
-        </button>
-      </div>
       <table>
         <thead>
           <tr>
@@ -146,42 +110,9 @@ const ListaUmow = () => {
                   onChange={() => handleSelectRow(row.id)}
                 />
               </td>
-              <td>
-                {editRow === row.id ? (
-                  <input
-                    type="text"
-                    name="klient"
-                    value={editedData.klient}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  row.klient
-                )}
-              </td>
-              <td>
-                {editRow === row.id ? (
-                  <input
-                    type="date"
-                    name="dataPodpisania"
-                    value={editedData.dataPodpisania}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  row.dataPodpisania
-                )}
-              </td>
-              <td>
-                {editRow === row.id ? (
-                  <input
-                    type="text"
-                    name="handlowiec"
-                    value={editedData.handlowiec}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  row.handlowiec
-                )}
-              </td>
+              <td>{row.klient}</td>
+              <td>{row.dataPodpisania}</td>
+              <td>{row.handlowiec}</td>
               <td>
                 {row.sprzedaneProdukty.map((product) => (
                   <span
@@ -193,50 +124,11 @@ const ListaUmow = () => {
                 ))}
               </td>
               <td>
-                <span
-                  className="tooltip"
-                  title={row.opisUmowyBOK}
-                >
+                <span className="tooltip" title={row.opisUmowyBOK}>
                   {truncateText(row.opisUmowyBOK, 200)}
                 </span>
               </td>
-              <td>
-                {editRow === row.id ? (
-                  <select
-                    name="status"
-                    value={editedData.status}
-                    onChange={handleChange}
-                  >
-                    <option value="Dodana">Dodana</option>
-                    <option value="Sprawdzona">Sprawdzona</option>
-                    <option value="Zlecona do realizacji">Zlecona do realizacji</option>
-                    <option value="Umówiony montaż">Umówiony montaż</option>
-                  </select>
-                ) : (
-                  <select
-                    value={row.status}
-                    onChange={(e) => handleStatusChange(row.id, e.target.value)}
-                  >
-                    <option value="Dodana">Dodana</option>
-                    <option value="Sprawdzona">Sprawdzona</option>
-                    <option value="Zlecona do realizacji">Zlecona do realizacji</option>
-                    <option value="Umówiony montaż">Umówiony montaż</option>
-                  </select>
-                )}
-                {editRow === row.id && (
-                  <button className="action-button small" onClick={handleSave}>
-                    Zapisz
-                  </button>
-                )}
-                {editRow !== row.id && (
-                  <button
-                    className="action-button small secondary"
-                    onClick={() => handleEdit(row)}
-                  >
-                    Edytuj
-                  </button>
-                )}
-              </td>
+              <td>{row.status}</td>
             </tr>
           ))}
         </tbody>
