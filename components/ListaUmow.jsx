@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const ListaUmow = () => {
-  const [selectedRows, setSelectedRows] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
   const initialData = [
@@ -20,7 +19,7 @@ const ListaUmow = () => {
       dataPodpisania: '2025-05-07',
       handlowiec: 'Marcin Test',
       sprzedaneProdukty: ['Klimatyzacje'],
-      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono dostępność sprzętu.',
+      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono доступность sprzętu.',
       status: 'Sprawdzona',
     },
     {
@@ -44,12 +43,6 @@ const ListaUmow = () => {
   ];
 
   const [data, setData] = useState(initialData);
-
-  const handleSelectRow = (id) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-    );
-  };
 
   const handleSort = (key) => {
     let direction = 'ascending';
@@ -77,15 +70,6 @@ const ListaUmow = () => {
       <table>
         <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                checked={selectedRows.length === data.length}
-                onChange={(e) =>
-                  setSelectedRows(e.target.checked ? data.map((item) => item.id) : [])
-                }
-              />
-            </th>
             <th onClick={() => handleSort('klient')}>
               Klient {sortConfig.key === 'klient' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
             </th>
@@ -102,14 +86,7 @@ const ListaUmow = () => {
         </thead>
         <tbody>
           {data.map((row) => (
-            <tr key={row.id} className={selectedRows.includes(row.id) ? 'selected' : ''}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedRows.includes(row.id)}
-                  onChange={() => handleSelectRow(row.id)}
-                />
-              </td>
+            <tr key={row.id}>
               <td>{row.klient}</td>
               <td>{row.dataPodpisania}</td>
               <td>{row.handlowiec}</td>
