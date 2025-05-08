@@ -1,16 +1,6 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Leftside from '../components/Leftside';
-import Middleside from '../components/Middleside';
-import Rightside from '../components/Rightside';
+import React from "react";
+import LoginPage from "./login";
 
 export default function Home() {
-  return (
-    <div className="home">
-      <Navbar />
-      <Leftside />
-      <Middleside />
-      <Rightside />
-    </div>
-  );
+  return <LoginPage />;
 }

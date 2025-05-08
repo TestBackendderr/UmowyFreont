@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -38,11 +38,13 @@ const Login = () => {
               placeholder="Wprowadź hasło"
             />
           </div>
-          <button type="submit" className="login-btn">Zaloguj się</button>
+          <button type="submit" className="login-btn">
+            Zaloguj się
+          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
