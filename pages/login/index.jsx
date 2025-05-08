@@ -1,47 +1,27 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import LoginForm from "@/components/forms/LoginForm";
+import { login } from "@/services/authService";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    router.push("/");
+  const handleLogin = async (email, password) => {
+    try {
+      const { accessToken } = await login(email, password);
+      localStorage.setItem("accessToken", accessToken);
+      router.push("/dashboard");
+    } catch (err) {
+      setError("Nieprawidłowy email lub hasło.");
+    }
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
         <h2>Logowanie do CRM</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Wprowadź email"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Hasło</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Wprowadź hasło"
-            />
-          </div>
-          <button type="submit" className="login-btn">
-            Zaloguj się
-          </button>
-        </form>
+        <LoginForm onSubmit={handleLogin} error={error} />
       </div>
     </div>
   );
