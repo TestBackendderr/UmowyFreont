@@ -1,0 +1,184 @@
+.lista-umow-page {
+    display: flex;
+    min-height: 100vh;
+  
+    .lista-umow-content {
+      margin-left: 220px;
+      padding: 80px 20px 20px;
+      background-color: #f4f6f9;
+      flex: 1;
+    }
+  }
+  
+  .lista-umow {
+    max-width: 1400px; 
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+    h2 {
+      color: #1a252f;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+  
+    .table-actions {
+      margin-bottom: 20px;
+  
+      .action-button {
+        padding: 10px 20px; 
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+  
+        &:hover {
+          background-color: #0056b3;
+        }
+  
+        &:disabled {
+          background-color: #6c757d;
+          cursor: not-allowed;
+        }
+      }
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px; 
+  
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+        color: #1a252f;
+      }
+  
+      th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+  
+      td {
+        vertical-align: middle;
+  
+        &.selected {
+          background-color: #e9f0f8;
+        }
+  
+        input[type="checkbox"] {
+          width: auto;
+          margin: 0;
+        }
+  
+        input[type="text"],
+        input[type="date"],
+        select {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #d1d5db;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+  
+        .product-tag {
+          display: inline-block; 
+          padding: 6px 12px; 
+          border-radius: 12px;
+          font-size: 14px; 
+          color: #ffffff;
+          font-weight: 500;
+          margin-right: 10px; 
+          margin-bottom: 5px; 
+  
+          &.product-fotowoltaika {
+            background-color: #28a745;
+          }
+  
+          &.product-magazyn-energii {
+            background-color: #17a2b8;
+          }
+  
+          &.product-magazyn-ciepła {
+            background-color: #dc3545;
+          }
+  
+          &.product-klimatyzacje {
+            background-color: #007bff;
+          }
+  
+          &.product-pompa-ciepła {
+            background-color: #fd7e14;
+          }
+  
+          &.product-inne {
+            background-color: #6c757d;
+          }
+        }
+  
+        .tooltip {
+          position: relative;
+          display: inline-block;
+          cursor: default;
+  
+          &:hover::after {
+            content: attr(title);
+            position: absolute;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1a252f;
+            color: #ffffff;
+            padding: 8px 12px; 
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1;
+          }
+        }
+  
+        .action-button {
+          padding: 6px 12px;
+          font-size: 12px;
+  
+          &.small {
+            padding: 4px 10px;
+          }
+  
+          &.secondary {
+            background-color: #6c757d;
+            color: #ffffff;
+            border: none;
+  
+            &:hover {
+              background-color: #5a6268;
+            }
+          }
+  
+          &:not(.secondary) {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+  
+            &:hover {
+              background-color: #0056b3;
+            }
+          }
+        }
+      }
+    }
+  }

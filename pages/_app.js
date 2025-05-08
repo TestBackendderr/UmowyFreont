@@ -7,6 +7,7 @@ import '../styles/Rightside.scss';
 import '../styles/Nadzisiaj.scss';
 import '../styles/Home.scss';
 import '../styles/UtworzUmowe.scss';
+import '../styles/ListaUmow.scss';
 
 export default function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;

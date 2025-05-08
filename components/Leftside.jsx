@@ -23,7 +23,9 @@ const Leftside = () => {
         <Link href="/utworz-umowe">
           <button className="action-button">Utwórz Umowę</button>
         </Link>
-        <button className="action-button secondary">Lista Umów</button>
+        <Link href="/lista-umow">
+          <button className="action-button secondary">Lista Umów</button>
+        </Link>
       </div>
     </aside>
   );
