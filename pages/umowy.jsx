@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Leftside from '../components/Leftside';
 import ListaUmow from '../components/ListaUmow';
 
-const ListaUmowPage = () => {
+const UmowyPage = () => {
   return (
     <div className="lista-umow-page">
       <Navbar />
@@ -15,4 +15,4 @@ const ListaUmowPage = () => {
   );
 };
 
-export default ListaUmowPage;
+export default UmowyPage;

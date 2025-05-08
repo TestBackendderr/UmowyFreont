@@ -24,7 +24,7 @@ const ListaUmow = () => {
       dataPodpisania: '2025-05-07',
       handlowiec: 'Marcin Test',
       sprzedaneProdukty: ['Klimatyzacje'],
-      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono dostępność sprzętu.',
+      opisUmowyBOK: 'Umowa na instalację klimatyzacji w biurze, klient oczekuje szybkiego montażu. Potwierdzono dostępность sprzętu.',
       status: 'Sprawdzona',
     },
     {

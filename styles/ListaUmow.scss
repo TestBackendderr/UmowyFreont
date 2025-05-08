@@ -11,7 +11,7 @@
   }
   
   .lista-umow {
-    max-width: 1400px; 
+    max-width: 1400px;
     margin: 0 auto;
     background-color: #ffffff;
     padding: 30px;
@@ -29,7 +29,7 @@
       margin-bottom: 20px;
   
       .action-button {
-        padding: 10px 20px; 
+        padding: 10px 20px;
         border-radius: 4px;
         font-size: 14px;
         font-weight: 500;
@@ -53,7 +53,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 16px; 
+      font-size: 16px;
   
       th,
       td {
@@ -96,14 +96,14 @@
         }
   
         .product-tag {
-          display: inline-block; 
-          padding: 6px 12px; 
+          display: inline-block;
+          padding: 6px 12px;
           border-radius: 12px;
-          font-size: 14px; 
+          font-size: 14px;
           color: #ffffff;
           font-weight: 500;
-          margin-right: 10px; 
-          margin-bottom: 5px; 
+          margin-right: 10px;
+          margin-bottom: 5px;
   
           &.product-fotowoltaika {
             background-color: #28a745;
@@ -143,7 +143,7 @@
             transform: translateX(-50%);
             background-color: #1a252f;
             color: #ffffff;
-            padding: 8px 12px; 
+            padding: 8px 12px;
             border-radius: 4px;
             font-size: 14px;
             white-space: nowrap;
