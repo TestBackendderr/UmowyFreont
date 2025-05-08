@@ -20,7 +20,9 @@ const Leftside = () => {
         ))}
       </nav>
       <div className="menu-buttons">
-        <button className="action-button">Utwórz Umowę</button>
+        <Link href="/utworz-umowe">
+          <button className="action-button">Utwórz Umowę</button>
+        </Link>
         <button className="action-button secondary">Lista Umów</button>
       </div>
     </aside>

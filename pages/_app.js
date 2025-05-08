@@ -6,6 +6,7 @@ import '../styles/Middleside.scss';
 import '../styles/Rightside.scss';
 import '../styles/Nadzisiaj.scss';
 import '../styles/Home.scss';
+import '../styles/UtworzUmowe.scss';
 
 export default function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
