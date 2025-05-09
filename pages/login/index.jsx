@@ -2,15 +2,17 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import LoginForm from "@/components/forms/LoginForm";
 import { login } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setAccessToken } = useAuth();
 
   const handleLogin = async (email, password) => {
     try {
       const { accessToken } = await login(email, password);
-      localStorage.setItem("accessToken", accessToken);
+      setAccessToken(accessToken);
       router.push("/dashboard");
     } catch (err) {
       setError("Nieprawidłowy email lub hasło.");
