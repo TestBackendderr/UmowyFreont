@@ -1,0 +1,119 @@
+.umowa-wiecej-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.umowa-wiecej-container .main-content {
+  flex: 1;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  margin-left: 270px;
+  margin-right: 16px;
+  margin-top: 80px;
+  margin-bottom: 16px;
+  max-width: 960px;
+  color: #1a252f;
+}
+
+.umowa-wiecej-container .main-content h1 {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1a252f;
+  text-transform: uppercase;
+}
+
+.umowa-wiecej-container .main-content h2 {
+  font-size: 20px;
+  margin: 24px 0 12px;
+  color: #1a252f;
+  font-weight: 600;
+}
+
+.umowa-wiecej-container .main-content .umowa-section {
+  margin-bottom: 20px;
+}
+
+.umowa-wiecej-container .main-content .umowa-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a252f;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.umowa-wiecej-container .main-content .umowa-section p,
+.umowa-wiecej-container .main-content p {
+  font-size: 14px;
+  color: #1a252f;
+  margin: 2px 0;
+  line-height: 1.5;
+}
+
+.umowa-wiecej-container .main-content .umowa-section .products-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.umowa-wiecej-container .main-content .product-tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: default;
+  transition: transform 0.2s ease-in-out;
+}
+
+.umowa-wiecej-container .main-content .product-tag:hover {
+  transform: scale(1.03);
+}
+
+.product-fotowoltaika {
+  background-color: #28a745;
+}
+
+.product-magazyn-energii {
+  background-color: #17a2b8;
+}
+
+.product-magazyn-ciepła {
+  background-color: #dc3545;
+}
+
+.product-klimatyzacje {
+  background-color: #007bff;
+}
+
+.product-pompa-ciepła {
+  background-color: #fd7e14;
+}
+
+.product-inne {
+  background-color: #6c757d;
+}
+
+.umowa-wiecej-container .main-content .opis-bok .full-opis {
+  color: #007bff;
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.umowa-wiecej-container .main-content .opis-bok .full-opis:hover {
+  text-decoration: underline;
+}
+
+.umowa-wiecej-container .main-content hr {
+  border: none;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 24px 0;
+}

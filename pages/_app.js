@@ -8,6 +8,7 @@ import "../styles/Nadzisiaj.scss";
 import "../styles/Home.scss";
 import "../styles/UtworzUmowe.scss";
 import "../styles/ListaUmow.scss";
+import "../styles/UmowaWiecej.scss";
 import { AuthProvider } from "../context/AuthContext";
 
 export default function MyApp({ Component, pageProps }) {
