@@ -6,9 +6,13 @@ import AddressStep from "./steps/AddressStep";
 import InstallationStep from "./steps/InstallationStep";
 import FinanceStep from "./steps/FinanceStep";
 import AdditionalInfoStep from "./steps/AdditionalInfoStep";
+import { useAuth } from "@/context/AuthContext";
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const UtworzUmowe = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     handlowiec: "",
@@ -68,8 +72,14 @@ const UtworzUmowe = () => {
     rodzajKlienta: "",
     dataPodpisania: "",
     przedaneProdukty: [],
-    opisUmowyBOK: "",
+    userId: 0,
   });
+
+  useEffect(() => {
+    if (user && user.sub) {
+      setFormData((prev) => ({ ...prev, userId: Number(user.sub) }));
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,25 +99,39 @@ const UtworzUmowe = () => {
   const prevStep = () => setStep((prev) => prev - 1);
 
   const handleSubmit = async () => {
-    console.log("Отправляемые данные:", formData);
+    if (!formData.userId) {
+      alert(
+        "Błąd: Nie znaleziono ID użytkownika. Upewnij się, że jesteś zalogowany."
+      );
+      return;
+    }
+
+    const submissionData = {
+      ...formData,
+      cenaBrutto: parseFloat(formData.cenaBrutto) || 0,
+      pierwszaWplata: parseFloat(formData.pierwszaWplata) || 0,
+      drugaWplata: formData.drugaWplata
+        ? parseFloat(formData.drugaWplata)
+        : undefined,
+      handlowiecWynagrodzenie: formData.handlowiecWynagrodzenie
+        ? parseFloat(formData.handlowiecWynagrodzenie)
+        : undefined,
+    };
+
     try {
-      const response = await axios.post("/api/umowy", formData, {
+      const response = await axios.post(`${apiUrl}/umowa`, submissionData, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
       alert(`Dane zapisane! ID umowy: ${response.data.id}`);
       router.push("/");
     } catch (error) {
-      console.error(
-        "Błąd podczas zapisywania danych:",
-        error.response ? error.response.data : error.message
-      );
-      alert("Błąd podczas zapisywania danych. Sprawdź консолę.");
+      alert("Błąd podczas zapisywania danych. Sprawdź konsolę.");
     }
   };
 
-  // Автоматическое заполнение адреса места установки на основе адреса клиента
   useEffect(() => {
     if (
       step === 3 &&
@@ -201,6 +225,10 @@ const UtworzUmowe = () => {
         return null;
     }
   };
+
+  if (!user) {
+    return <div>Ładowanie danych użytkownika lub brak autoryzacji...</div>;
+  }
 
   return (
     <div className="utworz-umowe">

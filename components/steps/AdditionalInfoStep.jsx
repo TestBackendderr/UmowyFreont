@@ -51,7 +51,9 @@ const AdditionalInfoStep = ({
         >
           <option value="">-- Wybierz --</option>
           <option value="Osoba fizyczna">Osoba fizyczna</option>
-          <option value="Działalność gospodarcza">Działalność gospodarcza</option>
+          <option value="Działalność gospodarcza">
+            Działalność gospodarcza
+          </option>
         </select>
       </div>
       <div className="form-group">
@@ -60,15 +62,6 @@ const AdditionalInfoStep = ({
           type="date"
           name="dataPodpisania"
           value={formData.dataPodpisania}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Opis umowy BOK</label>
-        <textarea
-          name="opisUmowyBOK"
-          value={formData.opisUmowyBOK}
           onChange={handleChange}
           required
         />

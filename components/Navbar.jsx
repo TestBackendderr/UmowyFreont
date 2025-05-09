@@ -6,7 +6,7 @@ const Navbar = () => {
   const { user, loading, logout } = useAuth();
 
   if (loading) {
-    return null; // Prevent rendering until auth state is resolved
+    return null;
   }
 
   return (

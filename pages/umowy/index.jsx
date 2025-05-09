@@ -1,7 +1,7 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Leftside from '../components/Leftside';
-import ListaUmow from '../components/ListaUmow';
+import React from "react";
+import Navbar from "../../components/Navbar";
+import Leftside from "../../components/Leftside";
+import ListaUmow from "../../components/ListaUmow";
 
 const UmowyPage = () => {
   return (

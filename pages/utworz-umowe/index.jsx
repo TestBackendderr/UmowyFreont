@@ -1,7 +1,7 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Leftside from '../components/Leftside';
-import UtworzUmowe from '../components/UtworzUmowe';
+import React from "react";
+import Navbar from "../../components/Navbar";
+import Leftside from "../../components/Leftside";
+import UtworzUmowe from "../../components/UtworzUmowe";
 
 const UtworzUmowePage = () => {
   return (
