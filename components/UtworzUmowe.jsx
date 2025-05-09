@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 import PersonalDataStep from "./steps/PersonalDataStep";
 import AddressStep from "./steps/AddressStep";
 import InstallationStep from "./steps/InstallationStep";
@@ -87,10 +88,57 @@ const UtworzUmowe = () => {
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = () => {
-    console.log("Form Data:", formData);
-    router.push("/");
+  const handleSubmit = async () => {
+    console.log("Отправляемые данные:", formData);
+    try {
+      const response = await axios.post("/api/umowy", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      alert(`Dane zapisane! ID umowy: ${response.data.id}`);
+      router.push("/");
+    } catch (error) {
+      console.error(
+        "Błąd podczas zapisywania danych:",
+        error.response ? error.response.data : error.message
+      );
+      alert("Błąd podczas zapisywania danych. Sprawdź консолę.");
+    }
   };
+
+  // Автоматическое заполнение адреса места установки на основе адреса клиента
+  useEffect(() => {
+    if (
+      step === 3 &&
+      formData.adresImie &&
+      formData.adresUlica &&
+      formData.adresNrDomu &&
+      formData.adresMiejscowosc &&
+      formData.adresKodPocztowy &&
+      formData.adresPowiat &&
+      formData.adresWojewodztwo
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        miUlica: prev.miUlica || prev.adresUlica,
+        miNrDomu: prev.miNrDomu || prev.adresNrDomu,
+        miMiejscowosc: prev.miMiejscowosc || prev.adresMiejscowosc,
+        miKod: prev.miKod || prev.adresKodPocztowy,
+        miPowiat: prev.miPowiat || prev.adresPowiat,
+        miWojewodztwo: prev.miWojewodztwo || prev.adresWojewodztwo,
+      }));
+    }
+  }, [
+    step,
+    formData.adresImie,
+    formData.adresUlica,
+    formData.adresNrDomu,
+    formData.adresMiejscowosc,
+    formData.adresKodPocztowy,
+    formData.adresPowiat,
+    formData.adresWojewodztwo,
+  ]);
 
   const products = [
     "Fotowoltaika",

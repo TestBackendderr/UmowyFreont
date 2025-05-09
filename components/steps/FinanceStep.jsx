@@ -23,23 +23,32 @@ const FinanceStep = ({
       </div>
       <div className="form-group">
         <label>Operator OSD</label>
-        <input
-          type="text"
+        <select
           name="operatorOsd"
           value={formData.operatorOsd}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="PGE Dystrybucja">PGE Dystrybucja</option>
+          <option value="Tauron Dystrybucja">Tauron Dystrybucja</option>
+          <option value="ENERGA Dystrybucja">ENERGA Dystrybucja</option>
+          <option value="Enea Dystrybucja">Enea Dystrybucja</option>
+          <option value="inny">Inny</option>
+        </select>
       </div>
       <div className="form-group">
-        <label>Czy właściciel licznika</label>
-        <input
-          type="text"
+        <label>Czy właściciel instalacji jest właścicielem licznika?</label>
+        <select
           name="czyWlascicielLicznika"
           value={formData.czyWlascicielLicznika}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="tak">Tak</option>
+          <option value="nie">Nie</option>
+        </select>
       </div>
       <div className="form-group">
         <label>Cena brutto</label>
@@ -53,7 +62,7 @@ const FinanceStep = ({
         />
       </div>
       <div className="form-group">
-        <label>Pierwsza wpłata</label>
+        <label>1. wpłata (kwota brutto)</label>
         <input
           type="number"
           step="0.01"
@@ -65,47 +74,66 @@ const FinanceStep = ({
       </div>
       <div className="form-group">
         <label>Sposób płatności 1</label>
-        <input
-          type="text"
+        <select
           name="sposobPlatnosci1"
           value={formData.sposobPlatnosci1}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="przelew">Przelew</option>
+          <option value="kredyt">Kredyt</option>
+          <option value="leasing">Leasing</option>
+          <option value="gotowka">Gotówka</option>
+          <option value="prefinans">Prefinans</option>
+        </select>
       </div>
       <div className="form-group">
-        <label>Czy jedna wpłata</label>
-        <input
-          type="text"
+        <label>Brak 2. wpłaty, klient wpłaca wszystko w 1.?</label>
+        <select
           name="czyJednaWplata"
           value={formData.czyJednaWplata}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="tak">Tak</option>
+          <option value="nie">Nie</option>
+        </select>
       </div>
+      {formData.czyJednaWplata === "nie" && (
+        <>
+          <div className="form-group">
+            <label>2. wpłata (kwota brutto)</label>
+            <input
+              type="number"
+              step="0.01"
+              name="drugaWplata"
+              value={formData.drugaWplata}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Sposób płatności 2. wpłaty</label>
+            <select
+              name="sposobPlatnosci2"
+              value={formData.sposobPlatnosci2}
+              onChange={handleChange}
+            >
+              <option value="">-- Wybierz --</option>
+              <option value="przelew">Przelew</option>
+              <option value="kredyt">Kredyt</option>
+              <option value="leasing">Leasing</option>
+              <option value="gotowka">Gotówka</option>
+              <option value="prefinans">Prefinans</option>
+            </select>
+          </div>
+        </>
+      )}
       <div className="form-group">
-        <label>Druga wpłata (opcjonalne)</label>
+        <label>Powierzchnia domu (m²)</label>
         <input
           type="number"
-          step="0.01"
-          name="drugaWplata"
-          value={formData.drugaWplata}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Sposób płatności 2 (opcjonalne)</label>
-        <input
-          type="text"
-          name="sposobPlatnosci2"
-          value={formData.sposobPlatnosci2}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Powierzchnia domu (opcjonalne)</label>
-        <input
-          type="text"
           name="powierzchniaDomu"
           value={formData.powierzchniaDomu}
           onChange={handleChange}

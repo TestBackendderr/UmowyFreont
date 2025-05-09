@@ -18,33 +18,41 @@ const AdditionalInfoStep = ({
         />
       </div>
       <div className="form-group">
-        <label>Baner zamontowany (opcjonalne)</label>
-        <input
-          type="text"
+        <label>Czy został zamontowany baner w miejscu montażu?</label>
+        <select
           name="banerZamontowany"
           value={formData.banerZamontowany}
           onChange={handleChange}
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="tak">Tak</option>
+          <option value="nie">Nie</option>
+        </select>
       </div>
       <div className="form-group">
-        <label>Wynagrodzenie handlowca (opcjonalne)</label>
-        <input
-          type="number"
-          step="0.01"
+        <label>Handlowiec do wynagrodzenia (opcjonalne)</label>
+        <select
           name="handlowiecWynagrodzenie"
           value={formData.handlowiecWynagrodzenie}
           onChange={handleChange}
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="Bartek Test">Bartek Test</option>
+          <option value="Marcin Test">Marcin Test</option>
+        </select>
       </div>
       <div className="form-group">
         <label>Rodzaj klienta</label>
-        <input
-          type="text"
+        <select
           name="rodzajKlienta"
           value={formData.rodzajKlienta}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Wybierz --</option>
+          <option value="Osoba fizyczna">Osoba fizyczna</option>
+          <option value="Działalność gospodarcza">Działalność gospodarcza</option>
+        </select>
       </div>
       <div className="form-group">
         <label>Data podpisania</label>
