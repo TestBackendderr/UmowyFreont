@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import withAuth from "@/utils/withAuth";
 import Navbar from "@/components/Navbar";
 import Leftside from "@/components/Leftside";
 
@@ -154,4 +155,4 @@ const UmowaWiecej = () => {
   );
 };
 
-export default UmowaWiecej;
+export default withAuth(UmowaWiecej, ["Handlowiec", "Biuro_Obslugi"]);

@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import Leftside from "../../components/Leftside";
 import ListaUmow from "../../components/ListaUmow";
+import withAuth from "@/utils/withAuth";
 
 const UmowyPage = () => {
   return (
@@ -15,4 +16,4 @@ const UmowyPage = () => {
   );
 };
 
-export default UmowyPage;
+export default withAuth(UmowyPage);

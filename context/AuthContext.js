@@ -31,15 +31,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        `${apiUrl}/auth/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post(`${apiUrl}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
-      console.error("Logout failed:", error);
     } finally {
       updateAccessToken(null);
       router.push("/login");
@@ -47,53 +40,37 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        try {
-          setAccessToken(token);
-          const response = await axios.get(`${apiUrl}/auth/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUser(response.data.user);
-        } catch (err) {
-          console.error("Auth initialization failed:", err);
-          updateAccessToken(null);
-        }
-      }
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      updateAccessToken(token);
+    } else {
       setLoading(false);
-    };
-
-    initializeAuth();
+    }
   }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (accessToken && !user) {
-        try {
-          const response = await axios.get(`${apiUrl}/auth/me`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          setUser(response.data.user);
-        } catch (err) {
-          console.error("Fetch user failed:", err);
-          if (err.response?.status === 401) {
-            updateAccessToken(null);
-          }
+      if (!accessToken) return;
+
+      setLoading(true);
+      try {
+        const response = await axios.get(`${apiUrl}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setUser(response.data.user);
+      } catch (err) {
+        if (err.response?.status === 401) {
+          updateAccessToken(null);
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUser();
   }, [accessToken]);
-
-  if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator
-  }
 
   return (
     <AuthContext.Provider

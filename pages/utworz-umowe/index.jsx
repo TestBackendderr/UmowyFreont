@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import Leftside from "../../components/Leftside";
 import UtworzUmowe from "../../components/UtworzUmowe";
+import withAuth from "@/utils/withAuth";
 
 const UtworzUmowePage = () => {
   return (
@@ -15,4 +16,4 @@ const UtworzUmowePage = () => {
   );
 };
 
-export default UtworzUmowePage;
+export default withAuth(UtworzUmowePage, ["Handlowiec"]);
