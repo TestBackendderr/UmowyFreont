@@ -64,7 +64,7 @@ const ListaUmow = () => {
     user?.role === "Biuro_Obslugi" ? "Wszystkie umowy" : "Twoje Umowy";
 
   const handleRowClick = (id) => {
-    router.push(`/umowa`);
+    router.push(`/umowa/${id}`);
   };
 
   return (
