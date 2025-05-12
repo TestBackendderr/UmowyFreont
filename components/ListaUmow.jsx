@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext"; // путь к вашему контексту
+import { useRouter } from "next/router";
+import { useAuth } from "../context/AuthContext";
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const ListaUmow = () => {
   const { user, accessToken } = useAuth();
+  const router = useRouter();
+
   const [data, setData] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: null,
@@ -12,21 +16,28 @@ const ListaUmow = () => {
   });
 
   useEffect(() => {
-    const fetchUserContracts = async () => {
+    const fetchContracts = async () => {
       if (!user || !accessToken) return;
+
       try {
-        const response = await axios.get(`${apiUrl}/umowa/user/${user.sub}`, {
+        const endpoint =
+          user.role === "Biuro_Obslugi"
+            ? `${apiUrl}/umowa`
+            : `${apiUrl}/umowa/user/${user.sub}`;
+
+        const response = await axios.get(endpoint, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+
         setData(response.data);
       } catch (error) {
-        console.error("Failed to fetch user contracts:", error);
+        console.error("Failed to fetch contracts:", error);
       }
     };
 
-    fetchUserContracts();
+    fetchContracts();
   }, [user, accessToken]);
 
   const handleSort = (key) => {
@@ -49,9 +60,16 @@ const ListaUmow = () => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
+  const headerTitle =
+    user?.role === "Biuro_Obslugi" ? "Wszystkie umowy" : "Twoje Umowy";
+
+  const handleRowClick = (id) => {
+    router.push(`/umowa`);
+  };
+
   return (
     <div className="lista-umow">
-      <h2>Twoje Umowy</h2>
+      <h2>{headerTitle}</h2>
       <table>
         <thead>
           <tr>
@@ -77,7 +95,11 @@ const ListaUmow = () => {
         </thead>
         <tbody>
           {data.map((row) => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              onClick={() => handleRowClick(row.id)}
+              style={{ cursor: "pointer" }}
+            >
               <td>{row.imieNazwisko}</td>
               <td>{new Date(row.dataPodpisania).toLocaleDateString()}</td>
               <td>{row.handlowiec}</td>

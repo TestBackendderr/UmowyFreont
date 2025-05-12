@@ -1,13 +1,26 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const Leftside = () => {
-  const menuItems = [
-    { name: 'Kontakty', path: '/kontakty', icon: '👥' },
-    { name: 'Spotkania', path: '/spotkania', icon: '📅' },
-    { name: 'Oferty', path: '/oferty', icon: '📋' },
-    { name: 'Umowy', path: '/umowy', icon: '📝' },
-  ];
+  const { user } = useAuth();
+
+  const menuItems = React.useMemo(() => {
+    if (user?.role === "Handlowiec") {
+      return [
+        { name: "Kontakty", path: "/kontakty", icon: "👥" },
+        { name: "Spotkania", path: "/spotkania", icon: "📅" },
+        { name: "Oferty", path: "/oferty", icon: "📋" },
+        { name: "Umowy", path: "/umowy", icon: "📝" },
+      ];
+    }
+
+    if (user?.role === "Biuro_Obslugi") {
+      return [{ name: "Lista Umów", path: "/umowy", icon: "📝" }];
+    }
+
+    return [];
+  }, [user?.role]);
 
   return (
     <aside className="leftside">
@@ -19,10 +32,13 @@ const Leftside = () => {
           </Link>
         ))}
       </nav>
+
       <div className="menu-buttons">
-        <Link href="/utworz-umowe">
-          <button className="action-button">Utwórz Umowę</button>
-        </Link>
+        {user?.role === "Handlowiec" && (
+          <Link href="/utworz-umowe">
+            <button className="action-button">Utwórz Umowę</button>
+          </Link>
+        )}
       </div>
     </aside>
   );
