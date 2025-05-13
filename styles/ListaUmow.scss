@@ -24,6 +24,35 @@
       margin-bottom: 20px;
     }
   
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+
+      .filter-input {
+        padding: 10px 15px;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #1a252f;
+        background-color: #f8f9fa;
+        width: 200px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+
+        &::placeholder {
+          color: #6c757d;
+          opacity: 0.7;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+      }
+    }
+  
     table {
       width: 100%;
       border-collapse: collapse;
@@ -94,19 +123,19 @@
           &:hover::after {
             content: attr(title);
             position: absolute;
-            top: -10px; // Смещаем чуть выше текста, чтобы не перекрывать строку
-            left: 0; // Выравниваем по левому краю ячейки
-            transform: translateY(-100%); // Поднимаем над текстом
+            top: -10px;
+            left: 0;
+            transform: translateY(-100%);
             background-color: #1a252f;
             color: #ffffff;
             padding: 8px 12px;
             border-radius: 4px;
             font-size: 14px;
-            max-width: 300px; // Ограничиваем ширину подсказки
-            white-space: normal; // Разрешаем перенос текста
-            word-wrap: break-word; // Перенос слов
+            max-width: 300px;
+            white-space: normal;
+            word-wrap: break-word;
             z-index: 1;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Добавим тень для визуального эффекта
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
         }
       }

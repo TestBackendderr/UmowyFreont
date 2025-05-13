@@ -10,9 +10,11 @@ const ListaUmow = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: "ascending",
+  const [filteredData, setFilteredData] = useState([]);
+  const [filters, setFilters] = useState({
+    client: "",
+    dateSort: "", 
+    product: "",
   });
 
   useEffect(() => {
@@ -32,6 +34,7 @@ const ListaUmow = () => {
         });
 
         setData(response.data);
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Failed to fetch contracts:", error);
       }
@@ -40,19 +43,41 @@ const ListaUmow = () => {
     fetchContracts();
   }, [user, accessToken]);
 
-  const handleSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
+  useEffect(() => {
+    const applyFilters = () => {
+      let filtered = [...data];
 
-    const sortedData = [...data].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
-      return 0;
-    });
-    setData(sortedData);
+      if (filters.client) {
+        filtered = filtered.filter((row) =>
+          row.imieNazwisko.toLowerCase().includes(filters.client.toLowerCase())
+        );
+      }
+
+      if (filters.product) {
+        filtered = filtered.filter((row) =>
+          row.przedaneProdukty.some((product) =>
+            product.toLowerCase().includes(filters.product.toLowerCase())
+          )
+        );
+      }
+
+      if (filters.dateSort) {
+        filtered = filtered.sort((a, b) => {
+          const dateA = new Date(a.dataPodpisania);
+          const dateB = new Date(b.dataPodpisania);
+          return filters.dateSort === "newToOld" ? dateB - dateA : dateA - dateB;
+        });
+      }
+
+      setFilteredData(filtered);
+    };
+
+    applyFilters();
+  }, [filters, data]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const truncateText = (text, maxLength) => {
@@ -70,31 +95,48 @@ const ListaUmow = () => {
   return (
     <div className="lista-umow">
       <h2>{headerTitle}</h2>
+      <div className="filters">
+        <input
+          type="text"
+          name="client"
+          placeholder="Filtruj po kliencie"
+          value={filters.client}
+          onChange={handleFilterChange}
+          className="filter-input"
+        />
+        <select
+          name="dateSort"
+          value={filters.dateSort}
+          onChange={handleFilterChange}
+          className="filter-input"
+        >
+          <option value="">Wybierz sortowanie daty</option>
+          <option value="newToOld">Od nowych do starych</option>
+          <option value="oldToNew">Od starych do nowych</option>
+        </select>
+        <input
+          type="text"
+          name="product"
+          placeholder="Filtruj po produkcie"
+          value={filters.product}
+          onChange={handleFilterChange}
+          className="filter-input"
+        />
+      </div>
       <table>
         <thead>
           <tr>
-            <th onClick={() => handleSort("imieNazwisko")}>
-              Klient{" "}
-              {sortConfig.key === "imieNazwisko" &&
-                (sortConfig.direction === "ascending" ? "↑" : "↓")}
-            </th>
-            <th onClick={() => handleSort("dataPodpisania")}>
-              Data podpisania umowy{" "}
-              {sortConfig.key === "dataPodpisania" &&
-                (sortConfig.direction === "ascending" ? "↑" : "↓")}
-            </th>
-            <th onClick={() => handleSort("handlowiec")}>
-              Handlowiec{" "}
-              {sortConfig.key === "handlowiec" &&
-                (sortConfig.direction === "ascending" ? "↑" : "↓")}
-            </th>
+            <th>Klient</th>
+            <th>Data podpisania umowy</th>
+            <th>Handlowiec</th>
             <th>Sprzedane produkty</th>
             <th>Uwagi handlowca</th>
             <th>Status umowy</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
+  
+          {filteredData.map((row) => (
             <tr
               key={row.id}
               onClick={() => handleRowClick(row.id)}
