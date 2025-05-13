@@ -1,62 +1,72 @@
 import React, { useState } from "react";
 
 const DataZlozenia = () => {
-  const [showOsdInput, setShowOsdInput] = useState(false);
-  const [showFundingInput, setShowFundingInput] = useState(false);
-  const [osdDate, setOsdDate] = useState("2025-05-10");
-  const [fundingDate, setFundingDate] = useState("2025-05-15");
+  const [showDateInput, setShowDateInput] = useState(false); 
+  const [selectedType, setSelectedType] = useState(""); 
+  const [osdDate, setOsdDate] = useState(""); 
+  const [fundingDate, setFundingDate] = useState(""); 
 
-  const handleOsdButtonClick = () => {
-    setShowOsdInput(true);
+  const handleAddDateClick = () => {
+    setShowDateInput(true);
   };
-  const handleFundingButtonClick = () => {
-    setShowFundingInput(true);
+
+  const handleTypeSelect = (type) => {
+    setSelectedType(type); 
+    setShowDateInput(false); 
   };
-  const handleOsdDateChange = (e) => {
-    setOsdDate(e.target.value);
-    setShowOsdInput(false);
-  };
-  const handleFundingDateChange = (e) => {
-    setFundingDate(e.target.value);
-    setShowFundingInput(false);
+
+  const handleDateChange = (e) => {
+    const date = e.target.value;
+    if (selectedType === "OSD") {
+      setOsdDate(date); 
+    } else if (selectedType === "Dofinansowanie") {
+      setFundingDate(date); 
+    }
+    setShowDateInput(false);
+    setSelectedType(""); 
   };
 
   return (
     <div className="biuro2-section">
       <h3>Data Złożenia</h3>
-      <p>
-        Data złożenia wniosku OSD: {osdDate}
-        <button
-          className="set-date-osd-button"
-          onClick={handleOsdButtonClick}
-        >
-          Zmień
+
+
+      {!osdDate && !fundingDate && !showDateInput && (
+        <button className="submit-link-button" onClick={handleAddDateClick}>
+          Dodaj Date
         </button>
-      </p>
-      {showOsdInput && (
-        <input
-          type="date"
-          value={osdDate}
-          onChange={handleOsdDateChange}
-          className="date-input"
-        />
       )}
-      <p>
-        Data złożenia wniosku o dofinansowanie: {fundingDate}
-        <button
-          className="set-date-funding-button"
-          onClick={handleFundingButtonClick}
-        >
-          Zmień
-        </button>
-      </p>
-      {showFundingInput && (
-        <input
-          type="date"
-          value={fundingDate}
-          onChange={handleFundingDateChange}
-          className="date-input"
-        />
+
+      {showDateInput && (
+        <div>
+          <button className="submit-link-button" onClick={() => handleTypeSelect("OSD")}>
+            OSD
+          </button>
+          <button className="submit-link-button" onClick={() => handleTypeSelect("Dofinansowanie")}>
+            Dofinansowanie
+          </button>
+        </div>
+      )}
+
+      {(selectedType === "OSD" || selectedType === "Dofinansowanie") && (
+        <div>
+          <input
+            type="date"
+            onChange={handleDateChange}
+            className="date-input"
+          />
+        </div>
+      )}
+      {osdDate && (
+        <p>
+          Data złożenia wniosku OSD: {osdDate}
+        </p>
+      )}
+
+      {fundingDate && (
+        <p>
+          Data złożenia wniosku o dofinansowanie: {fundingDate}
+        </p>
       )}
     </div>
   );
