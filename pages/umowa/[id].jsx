@@ -3,11 +3,14 @@ import { useRouter } from "next/router";
 import withAuth from "@/utils/withAuth";
 import Navbar from "@/components/Navbar";
 import Leftside from "@/components/Leftside";
+import UmowaWiecejContent from "@/components/UmowaWiecejContent";
+import { useAuth } from "@/context/AuthContext";
 
 const UmowaWiecej = () => {
   const [umowa, setUmowa] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { id } = router.query;
 
@@ -31,10 +34,22 @@ const UmowaWiecej = () => {
     fetchUmowa();
   }, [id, apiUrl]);
 
-  if (loading)
-    return <div className="main-content">Ładowanie danych umowy...</div>;
+  if (loading || authLoading)
+    return <div className="main-content">Ładowanie danych...</div>;
 
   if (!umowa) return <div className="main-content">Brak dostępnej umowy</div>;
+
+  if (user?.role === "Biuro_Obslugi") {
+    return (
+      <div className="umowa-wiecej-container">
+        <Navbar />
+        <Leftside />
+        <div className="main-content">
+          <UmowaWiecejContent umowa={umowa} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="umowa-wiecej-container">

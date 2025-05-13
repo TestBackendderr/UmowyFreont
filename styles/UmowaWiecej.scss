@@ -11,12 +11,29 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  margin: 16px;
   margin-left: 270px;
-  margin-right: 16px;
   margin-top: 80px;
-  margin-bottom: 16px;
   max-width: 960px;
   color: #1a252f;
+}
+
+@media (max-width: 768px) {
+  .umowa-wiecej-container .main-content {
+    margin: 8px;
+    padding: 16px;
+    margin-left: 0;
+    margin-top: 16px;
+  }
+
+  .umowa-wiecej-container .main-content .biuro2-container {
+    flex-direction: column;
+  }
+
+  .umowa-wiecej-container .main-content .historia {
+    flex: 1;
+    max-height: none;
+  }
 }
 
 .umowa-wiecej-container .main-content h1 {
@@ -35,11 +52,8 @@
   font-weight: 600;
 }
 
-.umowa-wiecej-container .main-content .umowa-section {
-  margin-bottom: 20px;
-}
-
-.umowa-wiecej-container .main-content .umowa-section h3 {
+.umowa-wiecej-container .main-content .umowa-section h3,
+.umowa-wiecej-container .main-content .biuro2-section h3 {
   font-size: 14px;
   font-weight: 600;
   color: #1a252f;
@@ -48,11 +62,57 @@
 }
 
 .umowa-wiecej-container .main-content .umowa-section p,
-.umowa-wiecej-container .main-content p {
+.umowa-wiecej-container .main-content p,
+.umowa-wiecej-container .main-content .biuro2-section p {
   font-size: 14px;
   color: #1a252f;
-  margin: 2px 0;
+  margin: 4px 0;
   line-height: 1.5;
+}
+
+.umowa-wiecej-container .main-content .biuro2-section.dane p:first-of-type {
+  font-weight: 600;
+}
+
+.umowa-wiecej-container .main-content .biuro2-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.umowa-wiecej-container .main-content .biuro2-container {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.umowa-wiecej-container .main-content .biuro2-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.umowa-wiecej-container .main-content .biuro2-top-row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.umowa-wiecej-container .main-content .biuro2-main-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.umowa-wiecej-container .main-content .biuro2-section,
+.umowa-wiecej-container .main-content .umowa-section {
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
 }
 
 .umowa-wiecej-container .main-content .umowa-section .products-selection {
@@ -78,27 +138,23 @@
 .product-fotowoltaika {
   background-color: #28a745;
 }
-
 .product-magazyn-energii {
   background-color: #17a2b8;
 }
-
 .product-magazyn-ciepła {
   background-color: #dc3545;
 }
-
 .product-klimatyzacje {
   background-color: #007bff;
 }
-
 .product-pompa-ciepła {
   background-color: #fd7e14;
 }
-
 .product-inne {
   background-color: #6c757d;
 }
 
+/* Dodatkowe */
 .umowa-wiecej-container .main-content .opis-bok .full-opis {
   color: #007bff;
   margin-left: 4px;
@@ -109,6 +165,28 @@
 
 .umowa-wiecej-container .main-content .opis-bok .full-opis:hover {
   text-decoration: underline;
+}
+
+.umowa-wiecej-container
+  .main-content
+  .biuro2-section.platnosci
+  .dodaj-dokumenty {
+  color: #007bff;
+  cursor: pointer;
+  font-style: italic;
+}
+
+.umowa-wiecej-container
+  .main-content
+  .biuro2-section.platnosci
+  .dodaj-dokumenty:hover {
+  text-decoration: underline;
+}
+
+.umowa-wiecej-container .main-content .historia {
+  flex: 0 0 300px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .umowa-wiecej-container .main-content hr {
