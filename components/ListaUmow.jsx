@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
+import Filtr from "./Filtr";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -95,34 +96,8 @@ const ListaUmow = () => {
   return (
     <div className="lista-umow">
       <h2>{headerTitle}</h2>
-      <div className="filters">
-        <input
-          type="text"
-          name="client"
-          placeholder="Filtruj po kliencie"
-          value={filters.client}
-          onChange={handleFilterChange}
-          className="filter-input"
-        />
-        <select
-          name="dateSort"
-          value={filters.dateSort}
-          onChange={handleFilterChange}
-          className="filter-input"
-        >
-          <option value="">Wybierz sortowanie daty</option>
-          <option value="newToOld">Od nowych do starych</option>
-          <option value="oldToNew">Od starych do nowych</option>
-        </select>
-        <input
-          type="text"
-          name="product"
-          placeholder="Filtruj po produkcie"
-          value={filters.product}
-          onChange={handleFilterChange}
-          className="filter-input"
-        />
-      </div>
+
+      <Filtr filters={filters} onFilterChange={handleFilterChange} />
       <table>
         <thead>
           <tr>
@@ -135,7 +110,6 @@ const ListaUmow = () => {
           </tr>
         </thead>
         <tbody>
-  
           {filteredData.map((row) => (
             <tr
               key={row.id}
