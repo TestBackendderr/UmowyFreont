@@ -9,7 +9,6 @@ const Status = () => {
 
   const handleSave = () => {
     console.log("Zapisany status:", status);
-    // Здесь можно отправить статус на сервер или обновить глобальное состояние
   };
 
   return (
@@ -24,9 +23,13 @@ const Status = () => {
           <option value="W trakcie realizacji">W trakcie realizacji</option>
           <option value="Zakończona">Zakończona</option>
           <option value="Anulowana">Anulowana</option>
-          <option value="Oczekuje na potwierdzenie">Oczekuje na potwierdzenie</option>
+          <option value="Oczekuje na potwierdzenie">
+            Oczekuje na potwierdzenie
+          </option>
         </select>
-       
+        <button onClick={handleSave} className="status-save-button">
+          Zapisz status
+        </button>
       </div>
     </div>
   );

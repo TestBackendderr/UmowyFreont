@@ -8,9 +8,7 @@
 .umowa-wiecej-container .main-content {
   flex: 1;
   padding: 24px;
-  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
   margin: 16px;
   margin-left: 270px;
   margin-top: 80px;
@@ -97,7 +95,13 @@
   display: flex;
   flex-direction: row;
   gap: 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.umowa-wiecej-container .main-content .biuro2-top-row > div {
+  flex: 0 0 30%;
+  min-width: 250px;
 }
 
 .umowa-wiecej-container .main-content .biuro2-main-grid {
@@ -154,7 +158,6 @@
   background-color: #6c757d;
 }
 
-/* Dodatkowe */
 .umowa-wiecej-container .main-content .opis-bok .full-opis {
   color: #007bff;
   margin-left: 4px;
@@ -194,4 +197,33 @@
   height: 1px;
   background-color: #e0e0e0;
   margin: 24px 0;
+}
+
+.status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.status-dropdown {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.status-save-button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.status-save-button:hover {
+  background-color: #0056b3;
 }
