@@ -21,8 +21,6 @@ const Platnosci = () => {
     };
 
     setPayments([...payments, newPayment]);
-
-
     setAmount("");
     setDescription("");
     setLink("");
@@ -40,6 +38,8 @@ const Platnosci = () => {
   return (
     <div className="biuro2-section">
       <h3>Płatności</h3>
+
+      {payments.length === 0 && <p>Brak danych</p>}
 
       {payments.map((payment, index) => (
         <p key={index}>

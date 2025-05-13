@@ -1,45 +1,66 @@
 import React, { useState } from "react";
 
 const Dokumenty = () => {
-  const [showLinkInput, setShowLinkInput] = useState(false);
-  const [documentLink, setDocumentLink] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [title, setTitle] = useState("");
+  const [link, setLink] = useState("");
+
   const handleAddDocumentClick = () => {
-    setShowLinkInput(true);
+    setShowForm(true);
   };
-  const handleLinkChange = (e) => {
-    setDocumentLink(e.target.value);
-  };
-  const handleLinkSubmit = () => {
-    setShowLinkInput(false);
-    setDocumentLink("");
+
+  const handleSubmit = () => {
+    if (title.trim() && link.trim()) {
+      setDocuments([...documents, { title, link }]);
+      setTitle("");
+      setLink("");
+      setShowForm(false);
+    }
   };
 
   return (
     <div className="biuro2-section">
       <h3>Dokumenty</h3>
-      <p>1. Skan dokumentów</p>
-      <p>2. Zdjęcia przed realizacją</p>
-      <p>3. Zdjęcia po realizacji</p>
-      <p>4. Protokół końcowy</p>
-      <button
-        className="dodaj-dokumenty-button"
-        onClick={handleAddDocumentClick}
-      >
-        Dodaj dokumenty
-      </button>
-      {showLinkInput && (
-        <div className="document-link-container">
+
+      {documents.length === 0 && <p>Brak danych</p>}
+
+      {documents.map((doc, index) => (
+        <p key={index}>
+          <a
+            href={doc.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "black", textDecoration: "none" }}
+          >
+            {index + 1}. {doc.title}
+          </a>
+        </p>
+      ))}
+
+      {!showForm && (
+        <button className="dodaj-faktury-button" onClick={handleAddDocumentClick}>
+          Dodaj dokumenty
+        </button>
+      )}
+
+      {showForm && (
+        <div className="invoice-link-container">
           <input
             type="text"
-            value={documentLink}
-            onChange={handleLinkChange}
-            placeholder="Wstaw link do Google Dysk"
-            className="document-link-input"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Nazwa dokumentu"
+            className="invoice-link-input"
           />
-          <button
-            className="submit-link-button"
-            onClick={handleLinkSubmit}
-          >
+          <input
+            type="text"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder="Link do dokumentu"
+            className="invoice-link-input"
+          />
+          <button className="submit-link-button" onClick={handleSubmit}>
             Zapisz
           </button>
         </div>
