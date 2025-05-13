@@ -227,3 +227,33 @@
 .status-save-button:hover {
   background-color: #0056b3;
 }
+
+.invoice-link-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.invoice-link-input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dodaj-faktury-button,
+.submit-link-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dodaj-faktury-button:hover,
+.submit-link-button:hover {
+  background-color: #000000;
+}
