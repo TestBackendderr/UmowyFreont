@@ -1,31 +1,110 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const Platnosci = () => {
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+const Platnosci = ({ umowaId }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [payments, setPayments] = useState([]);
-  const [indexToDelete, setIndexToDelete] = useState(null);
-  const [editIndex, setEditIndex] = useState(null);
+  const [idToDelete, setIdToDelete] = useState(null);
+  const [editId, setEditId] = useState(null);
   const [editMode, setEditMode] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isNaN(umowaId)) {
+      setError("Nieprawidłowy identyfikator umowy");
+    }
+  }, [umowaId]);
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      if (isNaN(umowaId)) return;
+
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${apiUrl}/payments/umowa/${umowaId}`);
+        if (!response.ok) {
+          throw new Error("Nie udało się pobrać płatności");
+        }
+        const data = await response.json();
+        setPayments(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPayments();
+  }, [umowaId]);
+
+  const formatAmount = (amount) => {
+    const zloty = Math.floor(amount / 100);
+    return `${zloty.toLocaleString("pl-PL")} zł`;
+  };
+
+  const parseAmount = (input) => {
+    const cleaned = input.replace(/[^0-9]/g, "");
+    return parseInt(cleaned, 10) * 100;
+  };
 
   const handleAddInvoiceClick = () => {
     setShowLinkInput(true);
+    setAmount("");
+    setDescription("");
+    setLink("");
   };
 
-  const handleLinkSubmit = () => {
-    if (!amount || !description || !link) return;
+  const handleLinkSubmit = async () => {
+    if (!amount.trim() || !description.trim() || !link.trim()) {
+      setError("Kwota, opis i link są wymagane");
+      return;
+    }
 
-    const normalizedAmount = amount.trim().endsWith("zł")
-      ? amount.trim()
-      : `${amount.trim()} zł`;
+    if (isNaN(umowaId)) {
+      setError("Nieprawidłowy identyfikator umowy");
+      return;
+    }
 
-    const newPayment = { amount: normalizedAmount, description, link };
+    const parsedAmount = parseAmount(amount);
+    if (isNaN(parsedAmount)) {
+      setError("Nieprawidłowa kwota");
+      return;
+    }
 
-    setPayments([...payments, newPayment]);
-    resetForm();
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${apiUrl}/payments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parsedAmount,
+          description,
+          link,
+          umowaId: umowaId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Nie udało się dodać płatności");
+      }
+
+      const newPayment = await response.json();
+      setPayments([...payments, newPayment]);
+      resetForm();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
@@ -35,53 +114,110 @@ const Platnosci = () => {
     setShowLinkInput(false);
   };
 
-  const confirmDelete = (index) => {
-    setIndexToDelete(index);
+  const confirmDelete = (id) => {
+    setIdToDelete(id);
   };
 
-  const handleConfirmDelete = () => {
-    const updatedPayments = payments.filter(
-      (_, index) => index !== indexToDelete
-    );
-    setPayments(updatedPayments);
-    setIndexToDelete(null);
+  const handleConfirmDelete = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${apiUrl}/payments/${idToDelete}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Nie udało się usunąć płatności");
+      }
+
+      setPayments(payments.filter((payment) => payment.id !== idToDelete));
+      setIdToDelete(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancelDelete = () => {
-    setIndexToDelete(null);
+    setIdToDelete(null);
   };
 
-  const startEdit = (index) => {
-    setEditIndex(index);
+  const startEdit = (id) => {
+    setEditId(id);
     setEditMode(null);
     setEditValue("");
   };
 
   const selectFieldToEdit = (field) => {
-    const currentValue = payments[editIndex][field].replace(/\s?zł$/, "");
+    const payment = payments.find((p) => p.id === editId);
+    let currentValue = payment[field];
+    if (field === "amount") {
+      currentValue = (currentValue / 100).toString();
+    }
     setEditMode(field);
     setEditValue(currentValue);
   };
 
-  const handleEditSave = () => {
-    if (!editValue.trim()) return;
+  const handleEditSave = async () => {
+    if (!editValue.trim()) {
+      setError("Pole nie może być puste");
+      return;
+    }
 
-    const updatedPayments = [...payments];
-    const value =
-      editMode === "amount" && !editValue.trim().endsWith("zł")
-        ? `${editValue.trim()} zł`
-        : editValue.trim();
+    if (isNaN(umowaId)) {
+      setError("Nieprawidłowy identyfikator umowy");
+      return;
+    }
 
-    updatedPayments[editIndex][editMode] = value;
-    setPayments(updatedPayments);
+    let value = editValue.trim();
+    if (editMode === "amount") {
+      const parsedAmount = parseAmount(value);
+      if (isNaN(parsedAmount)) {
+        setError("Nieprawidłowa kwota");
+        return;
+      }
+      value = parsedAmount;
+    }
 
-    setEditIndex(null);
-    setEditMode(null);
-    setEditValue("");
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${apiUrl}/payments/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          [editMode]: value,
+          umowaId: umowaId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Nie udało się edytować płatności"
+        );
+      }
+
+      const updatedPayment = await response.json();
+      setPayments(
+        payments.map((payment) =>
+          payment.id === editId ? updatedPayment : payment
+        )
+      );
+      setEditId(null);
+      setEditMode(null);
+      setEditValue("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEditCancel = () => {
-    setEditIndex(null);
+    setEditId(null);
     setEditMode(null);
     setEditValue("");
   };
@@ -119,11 +255,14 @@ const Platnosci = () => {
         Całkowity koszt instalacji: <strong>45 000 zł</strong>
       </p>
 
-      {payments.length === 0 && <p>Brak danych.</p>}
+      {loading && <p>Ładowanie...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {payments.map((payment, index) => (
+      {payments.length === 0 && !loading && !error && <p>Brak danych.</p>}
+
+      {payments.map((payment) => (
         <div
-          key={index}
+          key={payment.id}
           style={{ display: "flex", alignItems: "center", marginBottom: "6px" }}
         >
           <a
@@ -132,34 +271,37 @@ const Platnosci = () => {
             rel="noopener noreferrer"
             style={{ color: "black", textDecoration: "none", flexGrow: 1 }}
           >
-            Wpłata {toRoman(index + 1)} – {payment.amount} –{" "}
-            {payment.description}
+            Wpłata {toRoman(payments.indexOf(payment) + 1)} –{" "}
+            {formatAmount(payment.amount)} – {payment.description}
           </a>
           <button
-            onClick={() => startEdit(index)}
+            onClick={() => startEdit(payment.id)}
             className="submit-link-button"
             style={{ marginLeft: "8px" }}
+            disabled={loading}
           >
             Edytuj
           </button>
           <button
-            onClick={() => confirmDelete(index)}
+            onClick={() => confirmDelete(payment.id)}
             className="cancel-link-button"
             style={{ marginLeft: "8px" }}
+            disabled={loading}
           >
             Usuń
           </button>
         </div>
       ))}
 
-      {indexToDelete !== null && (
+      {idToDelete !== null && (
         <div style={{ marginTop: "10px", marginBottom: "10px" }}>
           <p>
             Usunąć:{" "}
             <strong>
-              Wpłata {toRoman(indexToDelete + 1)} –{" "}
-              {payments[indexToDelete]?.amount} –{" "}
-              {payments[indexToDelete]?.description}
+              Wpłata{" "}
+              {toRoman(payments.findIndex((p) => p.id === idToDelete) + 1)} –{" "}
+              {formatAmount(payments.find((p) => p.id === idToDelete)?.amount)}{" "}
+              – {payments.find((p) => p.id === idToDelete)?.description}
             </strong>
             ?
           </p>
@@ -167,23 +309,29 @@ const Platnosci = () => {
             <button
               className="submit-link-button"
               onClick={handleConfirmDelete}
+              disabled={loading}
             >
               Tak
             </button>
-            <button className="cancel-link-button" onClick={handleCancelDelete}>
+            <button
+              className="cancel-link-button"
+              onClick={handleCancelDelete}
+              disabled={loading}
+            >
               Nie
             </button>
           </div>
         </div>
       )}
 
-      {editIndex !== null && editMode === null && (
+      {editId !== null && editMode === null && (
         <div style={{ marginTop: "10px", marginBottom: "10px" }}>
           <p>
             Edytujesz:{" "}
             <strong>
-              Wpłata {toRoman(editIndex + 1)} – {payments[editIndex]?.amount} –{" "}
-              {payments[editIndex]?.description}
+              Wpłata {toRoman(payments.findIndex((p) => p.id === editId) + 1)} –{" "}
+              {formatAmount(payments.find((p) => p.id === editId)?.amount)} –{" "}
+              {payments.find((p) => p.id === editId)?.description}
             </strong>
           </p>
           <p>Co chcesz edytować?</p>
@@ -191,35 +339,43 @@ const Platnosci = () => {
             <button
               onClick={() => selectFieldToEdit("amount")}
               className="submit-link-button"
+              disabled={loading}
             >
               Kwotę
             </button>
             <button
               onClick={() => selectFieldToEdit("description")}
               className="submit-link-button"
+              disabled={loading}
             >
               Opis
             </button>
             <button
               onClick={() => selectFieldToEdit("link")}
               className="submit-link-button"
+              disabled={loading}
             >
               Link
             </button>
-            <button onClick={handleEditCancel} className="cancel-link-button">
+            <button
+              onClick={handleEditCancel}
+              className="cancel-link-button"
+              disabled={loading}
+            >
               Anuluj
             </button>
           </div>
         </div>
       )}
 
-      {editIndex !== null && editMode !== null && (
+      {editId !== null && editMode !== null && (
         <div style={{ marginTop: "10px", marginBottom: "10px" }}>
           <p>
             Edytujesz:{" "}
             <strong>
-              Wpłata {toRoman(editIndex + 1)} – {payments[editIndex]?.amount} –{" "}
-              {payments[editIndex]?.description}
+              Wpłata {toRoman(payments.findIndex((p) => p.id === editId) + 1)} –{" "}
+              {formatAmount(payments.find((p) => p.id === editId)?.amount)} –{" "}
+              {payments.find((p) => p.id === editId)?.description}
             </strong>
           </p>
           <p>
@@ -236,28 +392,45 @@ const Platnosci = () => {
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             className="invoice-link-input"
+            placeholder={
+              editMode === "amount"
+                ? "Np. 12 000"
+                : editMode === "description"
+                ? "Np. Faktura Alior Bank"
+                : "Np. Link do Google Dysk"
+            }
+            disabled={loading}
           />
           <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
-            <button className="submit-link-button" onClick={handleEditSave}>
+            <button
+              className="submit-link-button"
+              onClick={handleEditSave}
+              disabled={loading}
+            >
               Zapisz
             </button>
-            <button className="cancel-link-button" onClick={handleEditCancel}>
+            <button
+              className="cancel-link-button"
+              onClick={handleEditCancel}
+              disabled={loading}
+            >
               Anuluj
             </button>
           </div>
         </div>
       )}
 
-      {editIndex === null && !showLinkInput && (
+      {editId === null && !showLinkInput && (
         <button
           className="dodaj-faktury-button"
           onClick={handleAddInvoiceClick}
+          disabled={loading || isNaN(umowaId)}
         >
           Dodaj faktury
         </button>
       )}
 
-      {editIndex === null && showLinkInput && (
+      {editId === null && showLinkInput && (
         <div className="invoice-link-container" style={{ marginTop: "10px" }}>
           <input
             type="text"
@@ -265,6 +438,7 @@ const Platnosci = () => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="invoice-link-input"
+            disabled={loading}
           />
           <input
             type="text"
@@ -272,6 +446,7 @@ const Platnosci = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="invoice-link-input"
+            disabled={loading}
           />
           <input
             type="text"
@@ -279,12 +454,21 @@ const Platnosci = () => {
             value={link}
             onChange={(e) => setLink(e.target.value)}
             className="invoice-link-input"
+            disabled={loading}
           />
           <div style={{ display: "flex", gap: "8px" }}>
-            <button className="submit-link-button" onClick={handleLinkSubmit}>
+            <button
+              className="submit-link-button"
+              onClick={handleLinkSubmit}
+              disabled={loading}
+            >
               Zapisz
             </button>
-            <button className="cancel-link-button" onClick={resetForm}>
+            <button
+              className="cancel-link-button"
+              onClick={resetForm}
+              disabled={loading}
+            >
               Anuluj
             </button>
           </div>

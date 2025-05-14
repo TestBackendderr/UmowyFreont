@@ -8,7 +8,8 @@ import Dokumenty from "./biuro/Dokumenty";
 import DataZlozenia from "./biuro/DataZlozenia";
 import Historia from "./biuro/Historia";
 
-const UmowaWiecejContent = () => {
+const UmowaWiecejContent = ({ umowa, umowaId }) => {
+  const parsedUmowaId = parseInt(umowaId, 10);
   return (
     <div className="biuro2-content">
       <div className="biuro2-container">
@@ -19,10 +20,10 @@ const UmowaWiecejContent = () => {
             <Status />
           </div>
           <div className="biuro2-main-grid">
-            <Platnosci />
+            <Platnosci umowaId={parsedUmowaId} />
             <DaneInstalacji />
-            <Dokumenty />
-            <DataZlozenia />
+            <Dokumenty umowaId={parsedUmowaId} />
+            <DataZlozenia umowaId={parsedUmowaId} />
           </div>
         </div>
         <Historia />

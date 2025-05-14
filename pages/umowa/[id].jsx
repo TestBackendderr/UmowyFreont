@@ -45,7 +45,7 @@ const UmowaWiecej = () => {
         <Navbar />
         <Leftside />
         <div className="main-content">
-          <UmowaWiecejContent umowa={umowa} />
+          <UmowaWiecejContent umowaId={id} umowa={umowa} />
         </div>
       </div>
     );
