@@ -1,10 +1,10 @@
 import React from "react";
 
-const NumerUmowy = () => {
+const NumerUmowy = ({ umowa }) => {
   return (
     <div className="biuro2-section">
-      <h3>Numer Umowy</h3>
-      <p>12345/2025</p>
+      <p>Numer Umowy: {umowa.numerUmowy}</p>
+      <p>Handlowiec: {umowa.handlowiec}</p>
     </div>
   );
 };

@@ -1,9 +1,7 @@
 import React from "react";
 
-// Создан компонент Filtr для обработки фильтров
 const Filtr = ({ filters, onFilterChange }) => {
   return (
-    // Перенесена разметка фильтров из ListaUmow
     <div className="filters">
       <input
         type="text"

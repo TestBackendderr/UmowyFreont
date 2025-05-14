@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const Platnosci = ({ umowaId }) => {
+const Platnosci = ({ umowaId, umowa }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -28,14 +29,12 @@ const Platnosci = ({ umowaId }) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${apiUrl}/payments/umowa/${umowaId}`);
-        if (!response.ok) {
-          throw new Error("Nie udało się pobrać płatności");
-        }
-        const data = await response.json();
+        const { data } = await axios.get(`${apiUrl}/payments/umowa/${umowaId}`);
         setPayments(data);
       } catch (err) {
-        setError(err.message);
+        setError(
+          err.response?.data?.message || "Nie udało się pobrać płatności"
+        );
       } finally {
         setLoading(false);
       }
@@ -81,27 +80,17 @@ const Platnosci = ({ umowaId }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${apiUrl}/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: parsedAmount,
-          description,
-          link,
-          umowaId: umowaId,
-        }),
+      const { data } = await axios.post(`${apiUrl}/payments`, {
+        amount: parsedAmount,
+        description,
+        link,
+        umowaId: umowaId,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Nie udało się dodać płatności");
-      }
-
-      const newPayment = await response.json();
-      setPayments([...payments, newPayment]);
+      setPayments([...payments, data]);
       resetForm();
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Nie udało się dodać płatności");
     } finally {
       setLoading(false);
     }
@@ -122,19 +111,11 @@ const Platnosci = ({ umowaId }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${apiUrl}/payments/${idToDelete}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Nie udało się usunąć płatności");
-      }
-
-      setPayments(payments.filter((payment) => payment.id !== idToDelete));
+      await axios.delete(`${apiUrl}/payments/${idToDelete}`);
+      setPayments(payments.filter((p) => p.id !== idToDelete));
       setIdToDelete(null);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Nie udało się usunąć płatności");
     } finally {
       setLoading(false);
     }
@@ -184,33 +165,19 @@ const Platnosci = ({ umowaId }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${apiUrl}/payments/${editId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          [editMode]: value,
-          umowaId: umowaId,
-        }),
+      const { data } = await axios.put(`${apiUrl}/payments/${editId}`, {
+        [editMode]: value,
+        umowaId: umowaId,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Nie udało się edytować płatności"
-        );
-      }
-
-      const updatedPayment = await response.json();
-      setPayments(
-        payments.map((payment) =>
-          payment.id === editId ? updatedPayment : payment
-        )
-      );
+      setPayments(payments.map((p) => (p.id === editId ? data : p)));
       setEditId(null);
       setEditMode(null);
       setEditValue("");
     } catch (err) {
-      setError(err.message);
+      setError(
+        err.response?.data?.message || "Nie udało się edytować płatności"
+      );
     } finally {
       setLoading(false);
     }
@@ -248,16 +215,20 @@ const Platnosci = ({ umowaId }) => {
     return romanNumerals[num - 1] || num;
   };
 
+  const formatCenaBrutto = (cena) => {
+    return `${parseFloat(cena).toLocaleString("pl-PL")} zł`;
+  };
+
   return (
     <div className="biuro2-section">
       <h3>Płatności</h3>
       <p>
-        Całkowity koszt instalacji: <strong>45 000 zł</strong>
+        Całkowity koszt instalacji:{" "}
+        <strong>{formatCenaBrutto(umowa.cenaBrutto)}</strong>
       </p>
 
       {loading && <p>Ładowanie...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
-
       {payments.length === 0 && !loading && !error && <p>Brak danych.</p>}
 
       {payments.map((payment) => (

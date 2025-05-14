@@ -7,21 +7,35 @@
 
 .umowa-wiecej-container .main-content {
   flex: 1;
-  padding: 24px;
-  border-radius: 12px;
-  margin: 16px;
-  margin-left: 270px;
-  margin-top: 80px;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1rem;
+  margin-left: 15%;
+  margin-top: 5rem;
   max-width: 960px;
   color: #1a252f;
 }
 
+@media (min-width: 1200px) {
+  .umowa-wiecej-container .main-content {
+    margin-left: 270px;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 992px) {
+  .umowa-wiecej-container .main-content {
+    margin-left: 1rem;
+    max-width: 90%;
+  }
+}
+
 @media (max-width: 768px) {
   .umowa-wiecej-container .main-content {
-    margin: 8px;
-    padding: 16px;
-    margin-left: 0;
-    margin-top: 16px;
+    margin: 0.5rem;
+    padding: 1rem;
+    margin-top: 2rem;
+    max-width: 100%;
   }
 
   .umowa-wiecej-container .main-content .biuro2-container {
@@ -34,38 +48,54 @@
   }
 }
 
+@media (max-width: 576px) {
+  .umowa-wiecej-container .main-content {
+    padding: 0.75rem;
+    margin: 0.25rem;
+    margin-top: 1rem;
+  }
+
+  .umowa-wiecej-container .main-content .biuro2-top-row > div {
+    min-width: 200px;
+  }
+
+  .umowa-wiecej-container .main-content .biuro2-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .umowa-wiecej-container .main-content h1 {
-  font-size: 30px;
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
   font-weight: 700;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
   color: #1a252f;
   text-transform: uppercase;
 }
 
 .umowa-wiecej-container .main-content h2 {
-  font-size: 20px;
-  margin: 24px 0 12px;
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  margin: 1.5rem 0 0.75rem;
   color: #1a252f;
   font-weight: 600;
 }
 
 .umowa-wiecej-container .main-content .umowa-section h3,
 .umowa-wiecej-container .main-content .biuro2-section h3 {
-  font-size: 14px;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   font-weight: 600;
   color: #1a252f;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
   text-transform: uppercase;
 }
 
 .umowa-wiecej-container .main-content .umowa-section p,
 .umowa-wiecej-container .main-content p,
 .umowa-wiecej-container .main-content .biuro2-section p {
-  font-size: 14px;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   color: #1a252f;
-  margin: 4px 0;
-  line-height: 1.5;
+  margin: 0.25rem 0;
+  line-height: 1.6;
 }
 
 .umowa-wiecej-container .main-content .biuro2-section.dane p:first-of-type {
@@ -75,26 +105,32 @@
 .umowa-wiecej-container .main-content .biuro2-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .umowa-wiecej-container .main-content .biuro2-container {
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .umowa-wiecej-container .main-content .biuro2-container {
+    flex-direction: column;
+  }
 }
 
 .umowa-wiecej-container .main-content .biuro2-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .umowa-wiecej-container .main-content .biuro2-top-row {
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 1.5rem;
   flex-wrap: nowrap;
   overflow-x: auto;
 }
@@ -104,31 +140,43 @@
   min-width: 250px;
 }
 
+@media (max-width: 576px) {
+  .umowa-wiecej-container .main-content .biuro2-top-row > div {
+    min-width: 200px;
+  }
+}
+
 .umowa-wiecej-container .main-content .biuro2-main-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .umowa-wiecej-container .main-content .biuro2-main-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .umowa-wiecej-container .main-content .biuro2-section,
 .umowa-wiecej-container .main-content .umowa-section {
   background-color: #f9fafb;
-  padding: 16px;
-  border-radius: 8px;
+  padding: 1rem;
+  border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .umowa-wiecej-container .main-content .umowa-section .products-selection {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .umowa-wiecej-container .main-content .product-tag {
-  padding: 4px 10px;
+  padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 600;
   color: #fff;
   cursor: default;
@@ -160,9 +208,9 @@
 
 .umowa-wiecej-container .main-content .opis-bok .full-opis {
   color: #007bff;
-  margin-left: 4px;
+  margin-left: 0.25rem;
   cursor: pointer;
-  font-size: 13px;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-style: italic;
 }
 
@@ -177,6 +225,7 @@
   color: #007bff;
   cursor: pointer;
   font-style: italic;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
 }
 
 .umowa-wiecej-container
@@ -192,34 +241,41 @@
   overflow-y: auto;
 }
 
+@media (max-width: 768px) {
+  .umowa-wiecej-container .main-content .historia {
+    flex: 1;
+    max-height: none;
+  }
+}
+
 .umowa-wiecej-container .main-content hr {
   border: none;
   height: 1px;
   background-color: #e0e0e0;
-  margin: 24px 0;
+  margin: 1.5rem 0;
 }
 
 .status-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .status-dropdown {
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
   border: 1px solid #ccc;
-  font-size: 14px;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
 }
 
 .status-save-button {
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 0.375rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
@@ -231,40 +287,40 @@
 .invoice-link-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .invoice-link-input {
-  padding: 6px 10px;
+  padding: 0.375rem 0.625rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 0.25rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
 }
 
 .dodaj-faktury-button,
 .submit-link-button {
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: 0.375rem 0.75rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   background-color: #007bff;
   border: none;
   color: white;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
 }
 
 .dodaj-faktury-button:hover,
 .submit-link-button:hover {
-  background-color: #000000;
+  background-color: #0056b3;
 }
 
 .cancel-link-button {
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: 0.375rem 0.75rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   background-color: #dc3545;
   border: none;
   color: white;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }

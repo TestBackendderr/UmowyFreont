@@ -15,12 +15,12 @@ const UmowaWiecejContent = ({ umowa, umowaId }) => {
       <div className="biuro2-container">
         <div className="biuro2-left">
           <div className="biuro2-top-row">
-            <Dane />
-            <NumerUmowy />
-            <Status />
+            <Dane umowa={umowa} />
+            <NumerUmowy umowa={umowa} />
+            <Status umowa={umowa} />
           </div>
           <div className="biuro2-main-grid">
-            <Platnosci umowaId={parsedUmowaId} />
+            <Platnosci umowa={umowa} umowaId={parsedUmowaId} />
             <DaneInstalacji />
             <Dokumenty umowaId={parsedUmowaId} />
             <DataZlozenia umowaId={parsedUmowaId} />

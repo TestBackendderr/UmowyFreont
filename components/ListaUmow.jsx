@@ -6,6 +6,13 @@ import Filtr from "./Filtr";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+const statusLabels = {
+  W_trakcie_realizacji: "W trakcie realizacji",
+  Zakonczona: "Zakończona",
+  Anulowana: "Anulowana",
+  Oczekuje_na_potwierdzenie: "Oczekuje na potwierdzenie",
+};
+
 const ListaUmow = () => {
   const { user, accessToken } = useAuth();
   const router = useRouter();
@@ -14,7 +21,7 @@ const ListaUmow = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({
     client: "",
-    dateSort: "", 
+    dateSort: "",
     product: "",
   });
 
@@ -66,7 +73,9 @@ const ListaUmow = () => {
         filtered = filtered.sort((a, b) => {
           const dateA = new Date(a.dataPodpisania);
           const dateB = new Date(b.dataPodpisania);
-          return filters.dateSort === "newToOld" ? dateB - dateA : dateA - dateB;
+          return filters.dateSort === "newToOld"
+            ? dateB - dateA
+            : dateA - dateB;
         });
       }
 
@@ -136,7 +145,7 @@ const ListaUmow = () => {
                   {truncateText(row.uwagiHandlowca, 200)}
                 </span>
               </td>
-              <td>(добавлю в базе)</td>
+              <td>{statusLabels[row.status] || "Brak statusu"}</td>
             </tr>
           ))}
         </tbody>
