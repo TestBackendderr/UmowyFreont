@@ -258,3 +258,17 @@
   background-color: #000000;
 }
 
+.cancel-link-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.cancel-link-button:hover {
+  background-color: #c82333;
+}
