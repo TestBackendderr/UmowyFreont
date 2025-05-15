@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import LoginForm from "@/components/forms/LoginForm";
 import { login } from "@/services/authService";
@@ -7,7 +7,13 @@ import { useAuth } from "@/context/AuthContext";
 const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
-  const { setAccessToken } = useAuth();
+  const { user, loading, setAccessToken } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/dashboard");
+    }
+  }, [user, loading, router]);
 
   const handleLogin = async (email, password) => {
     try {
@@ -18,6 +24,10 @@ const LoginPage = () => {
       setError("Nieprawidłowy email lub hasło.");
     }
   };
+
+  if (loading) {
+    return <div className="login-page">Ładowanie...</div>;
+  }
 
   return (
     <div className="login-page">

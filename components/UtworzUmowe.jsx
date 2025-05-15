@@ -100,9 +100,6 @@ const UtworzUmowe = () => {
 
   const handleSubmit = async () => {
     if (!formData.userId) {
-      alert(
-        "Błąd: Nie znaleziono ID użytkownika. Upewnij się, że jesteś zalogowany."
-      );
       return;
     }
 
@@ -125,11 +122,8 @@ const UtworzUmowe = () => {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      alert(`Dane zapisane! ID umowy: ${response.data.id}`);
       router.push("/");
-    } catch (error) {
-      alert("Błąd podczas zapisywania danych. Sprawdź konsolę.");
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
