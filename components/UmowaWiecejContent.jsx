@@ -26,7 +26,7 @@ const UmowaWiecejContent = ({ umowa, umowaId }) => {
             <DataZlozenia umowaId={parsedUmowaId} />
           </div>
         </div>
-        <Historia />
+        <Historia umowa={umowa} />
       </div>
     </div>
   );
