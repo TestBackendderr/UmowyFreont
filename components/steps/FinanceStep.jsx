@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const FinanceStep = ({
   formData,
@@ -8,6 +8,17 @@ const FinanceStep = ({
   prevStep,
   nextStep,
 }) => {
+  // Local state to manage temporary product details for UI display
+  const [productDetails, setProductDetails] = useState({});
+
+  // Handle changes in product details (only for UI, not stored in formData)
+  const handleDetailChange = (product, field, value) => {
+    setProductDetails((prev) => ({
+      ...prev,
+      [product]: { ...prev[product], [field]: value },
+    }));
+  };
+
   return (
     <div className="step">
       <h3>Finanse</h3>
@@ -143,20 +154,65 @@ const FinanceStep = ({
         <label>Przedane produkty</label>
         <div className="products-selection">
           {products.map((product) => (
-            <label key={product} className="product-checkbox">
-              <input
-                type="checkbox"
-                checked={formData.przedaneProdukty.includes(product)}
-                onChange={() => handleProductChange(product)}
-              />
-              <span
-                className={`product-tag product-${product
-                  .toLowerCase()
-                  .replace(" ", "-")}`}
-              >
-                {product}
-              </span>
-            </label>
+            <div key={product} className="product-item">
+              <label className="product-checkbox">
+                <input
+                  type="checkbox"
+                  checked={formData.przedaneProdukty.includes(product)}
+                  onChange={() => handleProductChange(product)}
+                />
+                <span
+                  className={`product-tag product-${product
+                    .toLowerCase()
+                    .replace(" ", "-")}`}
+                >
+                  {product}
+                </span>
+              </label>
+              {formData.przedaneProdukty.includes(product) && (
+                <div className="product-details">
+                  {product === "Fotowoltaika" && (
+                    <select
+                      value={productDetails[product]?.type || ""}
+                      onChange={(e) =>
+                        handleDetailChange(product, "type", e.target.value)
+                      }
+                    >
+                      <option value="">-- Wybierz typ --</option>
+                      <option value="Risen 420W (5,04 kWp)">
+                        Risen 420W (5,04 kWp)
+                      </option>
+                      <option value="Risen 520W (5,04 kWp)">
+                        Risen 520W (5,04 kWp)
+                      </option>
+                    </select>
+                  )}
+                  {product === "Magazyn Energii" && (
+                    <select
+                      value={productDetails[product]?.type || ""}
+                      onChange={(e) =>
+                        handleDetailChange(product, "type", e.target.value)
+                      }
+                    >
+                      <option value="">-- Wybierz typ --</option>
+                      <option value="Deye 5 kWh (10 kWh)">
+                        Deye 5 kWh (10 kWh)
+                      </option>
+                    </select>
+                  )}
+                  {product === "Inne" && (
+                    <input
+                      type="text"
+                      placeholder="Wpisz szczegóły"
+                      value={productDetails[product]?.text || ""}
+                      onChange={(e) =>
+                        handleDetailChange(product, "text", e.target.value)
+                      }
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
