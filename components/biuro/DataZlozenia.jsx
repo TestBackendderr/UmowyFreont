@@ -24,9 +24,7 @@ const DataZlozenia = ({ umowaId }) => {
           setOsdDate(data.osdDate?.substring(0, 10) || "");
           setFundingDate(data.fundingDate?.substring(0, 10) || "");
         }
-      } catch (err) {
-        console.error("Błąd ładowania dat:", err);
-      }
+      } catch (err) {}
     };
 
     if (umowaId) fetchDates();
@@ -36,34 +34,37 @@ const DataZlozenia = ({ umowaId }) => {
     setShowDateInput(true);
     setShowEditOptions(false);
     setShowDeleteOptions(false);
+    setSelectedType("");
   };
 
   const handleEditClick = () => {
     setShowEditOptions(true);
     setShowDateInput(false);
     setShowDeleteOptions(false);
+    setSelectedType("");
   };
 
   const handleDeleteClick = () => {
     setShowDeleteOptions(true);
     setShowEditOptions(false);
     setShowDateInput(false);
+    setSelectedType("");
   };
 
   const handleTypeSelect = (type) => {
     setSelectedType(type);
-    setShowDateInput(false);
+    setShowDateInput(true);
     setShowEditOptions(false);
     setShowDeleteOptions(false);
   };
 
   const saveDate = async (date, type) => {
     const isoDate = new Date(date).toISOString();
-
     const payload = {
       umowaId,
-      osdDate: type === "OSD" ? isoDate : undefined,
-      fundingDate: type === "Dofinansowanie" ? isoDate : undefined,
+      osdDate: type === "OSD" ? isoDate : osdDate || undefined,
+      fundingDate:
+        type === "Dofinansowanie" ? isoDate : fundingDate || undefined,
     };
 
     try {
@@ -79,10 +80,9 @@ const DataZlozenia = ({ umowaId }) => {
 
       if (type === "OSD") setOsdDate(date);
       if (type === "Dofinansowanie") setFundingDate(date);
-    } catch (err) {
-      console.error("Błąd zapisu daty:", err);
-    }
+    } catch (err) {}
 
+    setShowDateInput(false);
     setSelectedType("");
   };
 
@@ -101,13 +101,13 @@ const DataZlozenia = ({ umowaId }) => {
           ? null
           : osdDate
           ? new Date(osdDate).toISOString()
-          : undefined,
+          : null,
       fundingDate:
         type === "Dofinansowanie"
           ? null
           : fundingDate
           ? new Date(fundingDate).toISOString()
-          : undefined,
+          : null,
     };
 
     try {
@@ -116,15 +116,19 @@ const DataZlozenia = ({ umowaId }) => {
           `${apiUrl}/submission-dates/${submissionDateId}`,
           payload
         );
-      }
 
-      if (type === "OSD") setOsdDate("");
-      if (type === "Dofinansowanie") setFundingDate("");
-    } catch (err) {
-      console.error("Błąd usuwania daty:", err);
-    }
+        if (type === "OSD") setOsdDate("");
+        if (type === "Dofinansowanie") setFundingDate("");
+
+        if (!payload.osdDate && !payload.fundingDate) {
+          await axios.delete(`${apiUrl}/submission-dates/${submissionDateId}`);
+          setSubmissionDateId(null);
+        }
+      }
+    } catch (err) {}
 
     setShowDeleteOptions(false);
+    setSelectedType("");
   };
 
   const handleCancel = () => {
@@ -195,7 +199,7 @@ const DataZlozenia = ({ umowaId }) => {
           </div>
         )}
 
-      {showDateInput && (
+      {showDateInput && !selectedType && (
         <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
           {!osdDate && (
             <button
@@ -226,7 +230,7 @@ const DataZlozenia = ({ umowaId }) => {
               className="submit-link-button"
               onClick={() => handleTypeSelect("OSD")}
             >
-              OSD
+              Edytuj OSD
             </button>
           )}
           {fundingDate && (
@@ -234,7 +238,7 @@ const DataZlozenia = ({ umowaId }) => {
               className="submit-link-button"
               onClick={() => handleTypeSelect("Dofinansowanie")}
             >
-              Dofinansowanie
+              Edytuj Dofinansowanie
             </button>
           )}
           <button className="cancel-link-button" onClick={handleCancel}>
