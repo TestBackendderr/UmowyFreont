@@ -92,11 +92,11 @@ const FinanceStep = ({
           required
         >
           <option value="">-- Wybierz --</option>
-          <option value="przelew">Przelew</option>
-          <option value="kredyt">Kredyt</option>
-          <option value="leasing">Leasing</option>
-          <option value="gotowka">Gotówka</option>
-          <option value="prefinans">Prefinans</option>
+          <option value="Przelew">Przelew</option>
+          <option value="Kredyt">Kredyt</option>
+          <option value="Leasing">Leasing</option>
+          <option value="Gotówka">Gotówka</option>
+          <option value="Prefinans">Prefinans</option>
         </select>
       </div>
       <div className="form-group">
@@ -132,11 +132,11 @@ const FinanceStep = ({
               onChange={handleChange}
             >
               <option value="">-- Wybierz --</option>
-              <option value="przelew">Przelew</option>
-              <option value="kredyt">Kredyt</option>
-              <option value="leasing">Leasing</option>
-              <option value="gotowka">Gotówka</option>
-              <option value="prefinans">Prefinans</option>
+              <option value="Przelew">Przelew</option>
+              <option value="Kredyt">Kredyt</option>
+              <option value="Leasing">Leasing</option>
+              <option value="Gotówka">Gotówka</option>
+              <option value="Prefinans">Prefinans</option>
             </select>
           </div>
         </>
