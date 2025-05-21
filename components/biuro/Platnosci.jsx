@@ -69,12 +69,11 @@ const Platnosci = ({ umowaId, umowa }) => {
   };
 
   const calculateRemainingAmount = () => {
-    const totalPaid = payments.reduce(
-      (sum, payment) => sum + payment.amount,
-      0
-    );
+    const totalConfirmed = payments
+      .filter((payment) => payment.isConfirmed === "Potwierdzona")
+      .reduce((sum, payment) => sum + payment.amount, 0);
     const totalCost = umowa.cenaBrutto;
-    const remaining = totalCost - totalPaid;
+    const remaining = totalCost - totalConfirmed;
     return remaining >= 0 ? remaining : 0;
   };
 

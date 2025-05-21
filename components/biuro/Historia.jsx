@@ -6,7 +6,9 @@ const Historia = ({ umowa }) => {
   function formatDateInText(text) {
     const dateRegex = /\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}.\d{3}Z)?/g;
 
-    return text.replace(dateRegex, (dateStr) => {
+    const textWithoutUnderscores = text.replace(/_/g, " ");
+
+    return textWithoutUnderscores.replace(dateRegex, (dateStr) => {
       const date = new Date(dateStr);
       if (isNaN(date)) return dateStr;
 
