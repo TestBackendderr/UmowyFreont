@@ -1,15 +1,23 @@
 import React from "react";
 
-const DaneInstalacji = () => {
+const DaneInstalacji = ({ umowa }) => {
+  const { przedaneProdukty = [] } = umowa;
+
   return (
     <div className="biuro2-section">
-      <h3>Dane Instalacji</h3>
-      <p>Fotowoltaika: 12 x Risen 420W (5,04 kWp)</p>
-      <p>Blachodachówka - mostek trapezowy</p>
-      <p>Brak optymalizatorów</p>
-      <p>Magazyn Energii: 2 x Deye 5 kWh (10 kWh)</p>
-      <p>Zasilanie awaryjne: TAK</p>
-      <p>Trasa kablowa do 10m</p>
+      <h3 className="section-title">Dane Instalacji</h3>
+      {przedaneProdukty.length > 0 ? (
+        <div className="produkty">
+          {przedaneProdukty.map((produkt, index) => (
+            <p key={index} className="produkt-item">
+              <strong>{produkt.name}</strong>:{" "}
+              {produkt.details?.type || "Brak danych"}
+            </p>
+          ))}
+        </div>
+      ) : (
+        <p className="brak-produktow">Brak produktów</p>
+      )}
     </div>
   );
 };

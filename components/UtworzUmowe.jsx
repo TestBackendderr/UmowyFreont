@@ -10,6 +10,20 @@ import { useAuth } from "@/context/AuthContext";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+// Utility function to parse przedaneProdukty from JSON strings (for backward compatibility)
+const parsePrzedaneProdukty = (products) => {
+  return products
+    .map((product) => {
+      try {
+        return typeof product === "string" ? JSON.parse(product) : product;
+      } catch (error) {
+        console.error(`Error parsing product: ${product}`, error);
+        return null;
+      }
+    })
+    .filter((product) => product !== null);
+};
+
 const UtworzUmowe = () => {
   const router = useRouter();
   const { user } = useAuth();
@@ -79,18 +93,69 @@ const UtworzUmowe = () => {
     if (user && user.sub) {
       setFormData((prev) => ({ ...prev, userId: Number(user.sub) }));
     }
-  }, []);
+  }, [user]);
+
+  // Handle fetching existing Umowa data (e.g., for editing)
+  useEffect(() => {
+    const fetchUmowa = async () => {
+      if (router.query.id) {
+        try {
+          const response = await axios.get(
+            `${apiUrl}/umowa/${router.query.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          const umowa = response.data;
+          setFormData({
+            ...umowa,
+            przedaneProdukty: parsePrzedaneProdukty(umowa.przedaneProdukty),
+          });
+        } catch (error) {
+          console.error("Error fetching umowa:", error);
+        }
+      }
+    };
+    fetchUmowa();
+  }, [router.query.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProductChange = (product) => {
+  // Handle product selection or update
+  const handleProductChange = (product, details = {}, toggle = true) => {
     setFormData((prev) => {
-      const updatedProducts = prev.przedaneProdukty.includes(product)
-        ? prev.przedaneProdukty.filter((p) => p !== product)
-        : [...prev.przedaneProdukty, product];
+      const exists = prev.przedaneProdukty.find((p) => p.name === product);
+      let updatedProducts;
+
+      if (toggle && exists) {
+        // Remove product if toggling and it exists
+        updatedProducts = prev.przedaneProdukty.filter(
+          (p) => p.name !== product
+        );
+      } else if (toggle && !exists) {
+        // Add new product if toggling and it doesn't exist
+        updatedProducts = [
+          ...prev.przedaneProdukty,
+          { name: product, details },
+        ];
+      } else if (!toggle && exists) {
+        // Update details of existing product
+        updatedProducts = prev.przedaneProdukty.map((p) =>
+          p.name === product ? { name: product, details } : p
+        );
+      } else {
+        // Add new product with details if not toggling and doesn't exist
+        updatedProducts = [
+          ...prev.przedaneProdukty,
+          { name: product, details },
+        ];
+      }
+
       return { ...prev, przedaneProdukty: updatedProducts };
     });
   };
@@ -100,8 +165,22 @@ const UtworzUmowe = () => {
 
   const handleSubmit = async () => {
     if (!formData.userId) {
+      console.error("User ID is missing");
       return;
     }
+
+    // Filter out products with empty details
+    const validProducts = formData.przedaneProdukty.filter((product) => {
+      if (
+        product.name === "Fotowoltaika" ||
+        product.name === "Magazyn Energii"
+      ) {
+        return !!product.details?.type;
+      } else if (product.name === "Inne") {
+        return !!product.details?.text;
+      }
+      return true; // Allow other products without details
+    });
 
     const submissionData = {
       ...formData,
@@ -113,6 +192,7 @@ const UtworzUmowe = () => {
       handlowiecWynagrodzenie: formData.handlowiecWynagrodzenie
         ? parseFloat(formData.handlowiecWynagrodzenie)
         : undefined,
+      przedaneProdukty: validProducts, // Send as objects, not strings
     };
 
     try {
@@ -123,7 +203,9 @@ const UtworzUmowe = () => {
         },
       });
       router.push("/");
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   useEffect(() => {

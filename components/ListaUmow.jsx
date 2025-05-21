@@ -13,6 +13,19 @@ const statusLabels = {
   Oczekuje_na_potwierdzenie: "Oczekuje na potwierdzenie",
 };
 
+const normalizePrzedaneProdukty = (products) => {
+  return products.map((product) => {
+    if (typeof product === "string") {
+      try {
+        return JSON.parse(product);
+      } catch {
+        return { name: product, details: {} };
+      }
+    }
+    return product;
+  });
+};
+
 const ListaUmow = () => {
   const { user, accessToken } = useAuth();
   const router = useRouter();
@@ -41,8 +54,13 @@ const ListaUmow = () => {
           },
         });
 
-        setData(response.data);
-        setFilteredData(response.data);
+        const normalizedData = response.data.map((umowa) => ({
+          ...umowa,
+          przedaneProdukty: normalizePrzedaneProdukty(umowa.przedaneProdukty),
+        }));
+
+        setData(normalizedData);
+        setFilteredData(normalizedData);
       } catch (error) {
         console.error("Failed to fetch contracts:", error);
       }
@@ -64,7 +82,7 @@ const ListaUmow = () => {
       if (filters.product) {
         filtered = filtered.filter((row) =>
           row.przedaneProdukty.some((product) =>
-            product.toLowerCase().includes(filters.product.toLowerCase())
+            product.name.toLowerCase().includes(filters.product.toLowerCase())
           )
         );
       }
@@ -129,14 +147,14 @@ const ListaUmow = () => {
               <td>{new Date(row.dataPodpisania).toLocaleDateString()}</td>
               <td>{row.handlowiec}</td>
               <td>
-                {row.przedaneProdukty.map((product) => (
+                {row.przedaneProdukty.map((product, index) => (
                   <span
-                    key={product}
-                    className={`product-tag product-${product
+                    key={`${product.name}-${index}`}
+                    className={`product-tag product-${product.name
                       .toLowerCase()
                       .replace(" ", "-")}`}
                   >
-                    {product}
+                    {product.name}
                   </span>
                 ))}
               </td>

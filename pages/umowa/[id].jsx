@@ -16,14 +16,35 @@ const UmowaWiecej = () => {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+  const normalizePrzedaneProdukty = (products) => {
+    return products.map((product) => {
+      if (typeof product === "string") {
+        try {
+          return JSON.parse(product);
+        } catch {
+          return { name: product, details: {} };
+        }
+      }
+      return product;
+    });
+  };
+
   useEffect(() => {
     const fetchUmowa = async () => {
       if (!id) return;
 
       try {
-        const response = await fetch(`${apiUrl}/umowa/${id}`);
+        const response = await fetch(`${apiUrl}/umowa/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
         const data = await response.json();
-        setUmowa(data);
+        // Normalize przedaneProdukty
+        setUmowa({
+          ...data,
+          przedaneProdukty: normalizePrzedaneProdukty(data.przedaneProdukty),
+        });
       } catch (error) {
         console.error("Błąd podczas pobierania umowy:", error);
       } finally {
@@ -76,14 +97,14 @@ const UmowaWiecej = () => {
         <div className="umowa-section">
           <h3>Sprzedane produkty</h3>
           <div className="products-selection">
-            {umowa.przedaneProdukty?.map((product) => (
+            {umowa.przedaneProdukty?.map((product, index) => (
               <span
-                key={product}
-                className={`product-tag product-${product
+                key={`${product.name}-${index}`}
+                className={`product-tag product-${product.name
                   .toLowerCase()
                   .replace(" ", "-")}`}
               >
-                {product}
+                {product.name}
               </span>
             ))}
           </div>
@@ -157,13 +178,14 @@ const UmowaWiecej = () => {
 
         <h2>Uwagi</h2>
         <p>
-          <strong>Powierzchnia domu:</strong> {umowa.powierzchniaDomu} m²
+          <strong>Powierzchnia domu:</strong> {umowa.powierzchniaDomu || "Brak"}{" "}
+          m²
         </p>
         <p>
-          <strong>Uwagi handlowca:</strong> {umowa.uwagiHandlowca}
+          <strong>Uwagi handlowca:</strong> {umowa.uwagiHandlowca || "Brak"}
         </p>
         <p>
-          <strong>Baner zamontowany:</strong> {umowa.banerZamontowany}
+          <strong>Baner zamontowany:</strong> {umowa.banerZamontowany || "Brak"}
         </p>
       </div>
     </div>

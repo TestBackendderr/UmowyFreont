@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const FinanceStep = ({
   formData,
@@ -8,15 +8,62 @@ const FinanceStep = ({
   prevStep,
   nextStep,
 }) => {
-  // Local state to manage temporary product details for UI display
   const [productDetails, setProductDetails] = useState({});
+  const [errors, setErrors] = useState({});
 
-  // Handle changes in product details (only for UI, not stored in formData)
+  useEffect(() => {
+    const initialDetails = formData.przedaneProdukty.reduce((acc, product) => {
+      acc[product.name] = product.details || {};
+      return acc;
+    }, {});
+    setProductDetails(initialDetails);
+  }, [formData.przedaneProdukty]);
+
   const handleDetailChange = (product, field, value) => {
     setProductDetails((prev) => ({
       ...prev,
       [product]: { ...prev[product], [field]: value },
     }));
+
+    handleProductChange(
+      product,
+      {
+        ...(productDetails[product] || {}),
+        [field]: value,
+      },
+      false
+    );
+  };
+
+  const onProductChange = (product) => {
+    const details = productDetails[product] || {};
+    handleProductChange(product, details, true);
+  };
+
+  const validateProducts = () => {
+    const newErrors = {};
+    formData.przedaneProdukty.forEach((product) => {
+      if (
+        product.name === "Fotowoltaika" ||
+        product.name === "Magazyn Energii"
+      ) {
+        if (!product.details?.type) {
+          newErrors[product.name] = "Wybierz typ produktu.";
+        }
+      } else if (product.name === "Inne") {
+        if (!product.details?.text) {
+          newErrors[product.name] = "Wpisz szczegóły produktu.";
+        }
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateProducts()) {
+      nextStep();
+    }
   };
 
   return (
@@ -158,8 +205,10 @@ const FinanceStep = ({
               <label className="product-checkbox">
                 <input
                   type="checkbox"
-                  checked={formData.przedaneProdukty.includes(product)}
-                  onChange={() => handleProductChange(product)}
+                  checked={formData.przedaneProdukty.some(
+                    (p) => p.name === product
+                  )}
+                  onChange={() => onProductChange(product)}
                 />
                 <span
                   className={`product-tag product-${product
@@ -169,46 +218,64 @@ const FinanceStep = ({
                   {product}
                 </span>
               </label>
-              {formData.przedaneProdukty.includes(product) && (
+              {formData.przedaneProdukty.some((p) => p.name === product) && (
                 <div className="product-details">
                   {product === "Fotowoltaika" && (
-                    <select
-                      value={productDetails[product]?.type || ""}
-                      onChange={(e) =>
-                        handleDetailChange(product, "type", e.target.value)
-                      }
-                    >
-                      <option value="">-- Wybierz typ --</option>
-                      <option value="Risen 420W (5,04 kWp)">
-                        Risen 420W (5,04 kWp)
-                      </option>
-                      <option value="Risen 520W (5,04 kWp)">
-                        Risen 520W (5,04 kWp)
-                      </option>
-                    </select>
+                    <>
+                      <select
+                        value={productDetails[product]?.type || ""}
+                        onChange={(e) =>
+                          handleDetailChange(product, "type", e.target.value)
+                        }
+                        required
+                      >
+                        <option value="">-- Wybierz typ --</option>
+                        <option value="Risen 420W (5,04 kWp)">
+                          Risen 420W (5,04 kWp)
+                        </option>
+                        <option value="Risen 520W (5,04 kWp)">
+                          Risen 520W (5,04 kWp)
+                        </option>
+                      </select>
+                      {errors[product] && (
+                        <span className="error">{errors[product]}</span>
+                      )}
+                    </>
                   )}
                   {product === "Magazyn Energii" && (
-                    <select
-                      value={productDetails[product]?.type || ""}
-                      onChange={(e) =>
-                        handleDetailChange(product, "type", e.target.value)
-                      }
-                    >
-                      <option value="">-- Wybierz typ --</option>
-                      <option value="Deye 5 kWh (10 kWh)">
-                        Deye 5 kWh (10 kWh)
-                      </option>
-                    </select>
+                    <>
+                      <select
+                        value={productDetails[product]?.type || ""}
+                        onChange={(e) =>
+                          handleDetailChange(product, "type", e.target.value)
+                        }
+                        required
+                      >
+                        <option value="">-- Wybierz typ --</option>
+                        <option value="Deye 5 kWh (10 kWh)">
+                          Deye 5 kWh (10 kWh)
+                        </option>
+                      </select>
+                      {errors[product] && (
+                        <span className="error">{errors[product]}</span>
+                      )}
+                    </>
                   )}
                   {product === "Inne" && (
-                    <input
-                      type="text"
-                      placeholder="Wpisz szczegóły"
-                      value={productDetails[product]?.text || ""}
-                      onChange={(e) =>
-                        handleDetailChange(product, "text", e.target.value)
-                      }
-                    />
+                    <>
+                      <input
+                        type="text"
+                        placeholder="Wpisz szczegóły"
+                        value={productDetails[product]?.text || ""}
+                        onChange={(e) =>
+                          handleDetailChange(product, "text", e.target.value)
+                        }
+                        required
+                      />
+                      {errors[product] && (
+                        <span className="error">{errors[product]}</span>
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -224,7 +291,11 @@ const FinanceStep = ({
         >
           Wstecz
         </button>
-        <button type="button" className="action-button" onClick={nextStep}>
+        <button
+          type="button"
+          className="action-button"
+          onClick={handleNextStep}
+        >
           Dalej
         </button>
       </div>
