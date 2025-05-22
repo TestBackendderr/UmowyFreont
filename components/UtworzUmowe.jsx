@@ -10,7 +10,6 @@ import { useAuth } from "@/context/AuthContext";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-// Utility function to parse przedaneProdukty from JSON strings (for backward compatibility)
 const parsePrzedaneProdukty = (products) => {
   return products
     .map((product) => {
@@ -95,7 +94,6 @@ const UtworzUmowe = () => {
     }
   }, [user]);
 
-  // Handle fetching existing Umowa data (e.g., for editing)
   useEffect(() => {
     const fetchUmowa = async () => {
       if (router.query.id) {
@@ -126,30 +124,25 @@ const UtworzUmowe = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle product selection or update
   const handleProductChange = (product, details = {}, toggle = true) => {
     setFormData((prev) => {
       const exists = prev.przedaneProdukty.find((p) => p.name === product);
       let updatedProducts;
 
       if (toggle && exists) {
-        // Remove product if toggling and it exists
         updatedProducts = prev.przedaneProdukty.filter(
           (p) => p.name !== product
         );
       } else if (toggle && !exists) {
-        // Add new product if toggling and it doesn't exist
         updatedProducts = [
           ...prev.przedaneProdukty,
           { name: product, details },
         ];
       } else if (!toggle && exists) {
-        // Update details of existing product
         updatedProducts = prev.przedaneProdukty.map((p) =>
           p.name === product ? { name: product, details } : p
         );
       } else {
-        // Add new product with details if not toggling and doesn't exist
         updatedProducts = [
           ...prev.przedaneProdukty,
           { name: product, details },
@@ -169,7 +162,6 @@ const UtworzUmowe = () => {
       return;
     }
 
-    // Filter out products with empty details
     const validProducts = formData.przedaneProdukty.filter((product) => {
       if (
         product.name === "Fotowoltaika" ||
@@ -179,7 +171,7 @@ const UtworzUmowe = () => {
       } else if (product.name === "Inne") {
         return !!product.details?.text;
       }
-      return true; // Allow other products without details
+      return true;
     });
 
     const submissionData = {
@@ -192,7 +184,7 @@ const UtworzUmowe = () => {
       handlowiecWynagrodzenie: formData.handlowiecWynagrodzenie
         ? parseFloat(formData.handlowiecWynagrodzenie)
         : undefined,
-      przedaneProdukty: validProducts, // Send as objects, not strings
+      przedaneProdukty: validProducts,
     };
 
     try {

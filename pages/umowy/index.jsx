@@ -6,7 +6,7 @@ import withAuth from "@/utils/withAuth";
 
 const UmowyPage = () => {
   return (
-    <div className="lista-umow-page">
+    <div className="umowy-page-layout">
       <Navbar />
       <Leftside />
       <div className="lista-umow-content">

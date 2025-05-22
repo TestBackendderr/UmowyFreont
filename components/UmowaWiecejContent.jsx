@@ -10,6 +10,7 @@ import Historia from "./biuro/Historia";
 
 const UmowaWiecejContent = ({ umowa, umowaId }) => {
   const parsedUmowaId = parseInt(umowaId, 10);
+
   return (
     <div className="biuro2-content">
       <div className="biuro2-container">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const mockData = [
   {
@@ -23,7 +23,7 @@ const mockData = [
 
 const Nadzisiaj = () => {
   const truncateText = (text, maxLength) => {
-    if (!text) return '';
+    if (!text) return "";
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
@@ -53,7 +53,9 @@ const Nadzisiaj = () => {
                     {item.products.map((product) => (
                       <span
                         key={product}
-                        className={`product-tag product-${product.toLowerCase().replace(' ', '-')}`}
+                        className={`product-tag product-${product
+                          .toLowerCase()
+                          .replace(" ", "-")}`}
                       >
                         {product}
                       </span>
@@ -66,7 +68,9 @@ const Nadzisiaj = () => {
                   </span>
                 </td>
                 <td>
-                  <span className={`status-tag status-${item.status.toLowerCase()}`}>
+                  <span
+                    className={`status-tag status-${item.status.toLowerCase()}`}
+                  >
                     {item.status}
                   </span>
                 </td>

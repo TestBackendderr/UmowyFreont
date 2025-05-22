@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 
-const Leftside = () => {
+const Leftside = ({ isOpen, onClose }) => {
   const { user } = useAuth();
 
   const menuItems = React.useMemo(() => {
@@ -23,10 +23,15 @@ const Leftside = () => {
   }, [user?.role]);
 
   return (
-    <aside className="leftside">
+    <aside className={`leftside ${isOpen ? "open" : ""}`}>
       <nav className="menu">
         {menuItems.map((item) => (
-          <Link key={item.name} href={item.path} className="menu-item">
+          <Link
+            key={item.name}
+            href={item.path}
+            className="menu-item"
+            onClick={onClose}
+          >
             <span className="menu-icon">{item.icon}</span>
             <span className="menu-text">{item.name}</span>
           </Link>
@@ -35,7 +40,7 @@ const Leftside = () => {
 
       <div className="menu-buttons">
         {user?.role === "Handlowiec" && (
-          <Link href="/utworz-umowe">
+          <Link href="/utworz-umowe" onClick={onClose}>
             <button className="action-button">Utwórz Umowę</button>
           </Link>
         )}

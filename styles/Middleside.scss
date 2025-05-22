@@ -1,7 +1,24 @@
 .middleside {
-    margin-left: 220px;
-    margin-right: 300px;
-    padding: 80px 20px 20px;
-    background-color: #f4f6f9;
-    min-height: calc(100vh - 60px);
+  margin-left: 220px;
+  margin-right: 300px;
+  padding: 80px 20px 20px;
+  background-color: #f4f6f9;
+  min-height: calc(100vh - 60px);
+
+  @media (max-width: 1000px) {
+    margin-left: 160px;
+    margin-right: 0;
   }
+}
+
+.nadzisiaj {
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+}

@@ -3,187 +3,121 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: #f4f6f8;
+  box-sizing: border-box;
 }
 
 .umowa-wiecej-container .main-content {
   flex: 1;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
+  padding: 1rem;
   margin: 1rem;
-  margin-left: 15%;
-  margin-top: 5rem;
-  max-width: 960px;
+  margin-left: 230px;
+  margin-top: 4rem;
+  max-width: calc(100% - 240px);
   color: #1a252f;
 }
 
-@media (min-width: 1200px) {
-  .umowa-wiecej-container .main-content {
-    margin-left: 270px;
-    max-width: 50%;
-  }
-}
-
-@media (max-width: 992px) {
-  .umowa-wiecej-container .main-content {
-    margin-left: 1rem;
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 768px) {
-  .umowa-wiecej-container .main-content {
-    margin: 0.5rem;
-    padding: 1rem;
-    margin-top: 2rem;
-    max-width: 100%;
-  }
-
-  .umowa-wiecej-container .main-content .biuro2-container {
-    flex-direction: column;
-  }
-
-  .umowa-wiecej-container .main-content .historia {
-    flex: 1;
-    max-height: none;
-  }
-}
-
-@media (max-width: 576px) {
-  .umowa-wiecej-container .main-content {
-    padding: 0.75rem;
-    margin: 0.25rem;
-    margin-top: 1rem;
-  }
-
-  .umowa-wiecej-container .main-content .biuro2-top-row > div {
-    min-width: 200px;
-  }
-
-  .umowa-wiecej-container .main-content .biuro2-main-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.umowa-wiecej-container .main-content h1 {
-  font-size: clamp(1.8rem, 5vw, 2.2rem);
+.main-content h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #1a252f;
   text-transform: uppercase;
 }
 
-.umowa-wiecej-container .main-content h2 {
-  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
-  margin: 1.5rem 0 0.75rem;
+.main-content h2 {
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  margin: 1rem 0 0.5rem;
   color: #1a252f;
   font-weight: 600;
 }
 
-.umowa-wiecej-container .main-content .umowa-section h3,
-.umowa-wiecej-container .main-content .biuro2-section h3 {
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+.main-content .biuro2-section h3,
+.main-content .umowa-section h3 {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   font-weight: 600;
   color: #1a252f;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
 }
 
-.umowa-wiecej-container .main-content .umowa-section p,
-.umowa-wiecej-container .main-content p,
-.umowa-wiecej-container .main-content .biuro2-section p {
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+.main-content .biuro2-section p,
+.main-content .umowa-section p,
+.main-content p {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   color: #1a252f;
   margin: 0.25rem 0;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-.umowa-wiecej-container .main-content .biuro2-section.dane p:first-of-type {
+.main-content .biuro2-section.dane p:first-of-type {
   font-weight: 600;
 }
 
-.umowa-wiecej-container .main-content .biuro2-content {
+.biuro2-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-.umowa-wiecej-container .main-content .biuro2-container {
+.biuro2-container {
   display: flex;
   flex-direction: row;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-@media (max-width: 768px) {
-  .umowa-wiecej-container .main-content .biuro2-container {
-    flex-direction: column;
-  }
+.biuro2-left {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.umowa-wiecej-container .main-content .biuro2-left {
+.biuro2-top-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.biuro2-top-row > div {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  min-width: 220px;
+  max-width: 32%;
 }
 
-.umowa-wiecej-container .main-content .biuro2-top-row {
-  display: flex;
-  flex-direction: row;
-  gap: 1.5rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-}
-
-.umowa-wiecej-container .main-content .biuro2-top-row > div {
-  flex: 0 0 30%;
-  min-width: 250px;
-}
-
-@media (max-width: 576px) {
-  .umowa-wiecej-container .main-content .biuro2-top-row > div {
-    min-width: 200px;
-  }
-}
-
-.umowa-wiecej-container .main-content .biuro2-main-grid {
+.biuro2-main-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
-@media (max-width: 576px) {
-  .umowa-wiecej-container .main-content .biuro2-main-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.umowa-wiecej-container .main-content .biuro2-section,
-.umowa-wiecej-container .main-content .umowa-section {
+.biuro2-section,
+.umowa-section {
   background-color: #f9fafb;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
-.umowa-wiecej-container .main-content .umowa-section .products-selection {
+.umowa-section .products-selection {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.umowa-wiecej-container .main-content .product-tag {
+.product-tag {
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   font-weight: 600;
   color: #fff;
   cursor: default;
   transition: transform 0.2s ease-in-out;
 }
 
-.umowa-wiecej-container .main-content .product-tag:hover {
+.product-tag:hover {
   transform: scale(1.03);
 }
 
@@ -206,76 +140,60 @@
   background-color: #6c757d;
 }
 
-.umowa-wiecej-container .main-content .opis-bok .full-opis {
+.opis-bok .full-opis {
   color: #007bff;
   margin-left: 0.25rem;
   cursor: pointer;
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   font-style: italic;
 }
 
-.umowa-wiecej-container .main-content .opis-bok .full-opis:hover {
+.opis-bok .full-opis:hover {
   text-decoration: underline;
 }
 
-.umowa-wiecej-container
-  .main-content
-  .biuro2-section.platnosci
-  .dodaj-dokumenty {
+.biuro2-section.platnosci .dodaj-dokumenty {
   color: #007bff;
   cursor: pointer;
   font-style: italic;
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
 }
 
-.umowa-wiecej-container
-  .main-content
-  .biuro2-section.platnosci
-  .dodaj-dokumenty:hover {
+.biuro2-section.platnosci .dodaj-dokumenty:hover {
   text-decoration: underline;
 }
 
-.umowa-wiecej-container .main-content .historia {
-  flex: 0 0 300px;
-  max-height: 400px;
+.historia {
+  flex: 1;
+  max-height: 450px;
   overflow-y: auto;
+  background-color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
-@media (max-width: 768px) {
-  .umowa-wiecej-container .main-content .historia {
-    flex: 1;
-    max-height: none;
-  }
-}
-
-.umowa-wiecej-container .main-content hr {
-  border: none;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 1.5rem 0;
-}
-
-.status-container {
+.status-container02 {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .status-dropdown {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
   border: 1px solid #ccc;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 .status-save-button {
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 0.375rem;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  border-radius: 0.25rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
@@ -288,20 +206,20 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .invoice-link-input {
-  padding: 0.375rem 0.625rem;
+  padding: 0.375rem;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 .dodaj-faktury-button,
 .submit-link-button {
-  padding: 0.375rem 0.75rem;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  padding: 0.375rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   background-color: #007bff;
   border: none;
   color: white;
@@ -315,8 +233,8 @@
 }
 
 .cancel-link-button {
-  padding: 0.375rem 0.75rem;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  padding: 0.375rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   background-color: #dc3545;
   border: none;
   color: white;
@@ -327,4 +245,113 @@
 
 .cancel-link-button:hover {
   background-color: #c82333;
+}
+
+@media (min-width: 1200px) {
+  .umowa-wiecej-container .main-content {
+    margin-left: 250px;
+    max-width: calc(100% - 260px);
+    padding: 1.25rem;
+  }
+
+  .biuro2-top-row > div {
+    max-width: 31.5%;
+    min-width: 250px;
+  }
+
+  .biuro2-main-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .umowa-wiecej-container .main-content {
+    margin-left: 220px;
+    max-width: calc(100% - 230px);
+    padding: 1rem;
+  }
+
+  .biuro2-top-row > div {
+    max-width: 48%;
+    min-width: 240px;
+  }
+
+  .biuro2-main-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .biuro2-container {
+    gap: 0.75rem;
+  }
+
+  .biuro2-left {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .umowa-wiecej-container .main-content {
+    margin-left: 1rem;
+    max-width: calc(100% - 2rem);
+    margin-top: 3.5rem;
+    padding: 0.75rem;
+  }
+
+  .biuro2-container {
+    flex-direction: column;
+  }
+
+  .biuro2-top-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .biuro2-top-row > div {
+    max-width: 100%;
+    min-width: unset;
+  }
+
+  .biuro2-main-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .historia {
+    max-height: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .umowa-wiecej-container .main-content {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 3rem;
+  }
+
+  .biuro2-content {
+    gap: 0.5rem;
+  }
+
+  .biuro2-container {
+    gap: 0.5rem;
+  }
+
+  .biuro2-left {
+    gap: 0.5rem;
+  }
+
+  .biuro2-section,
+  .umowa-section {
+    padding: 0.5rem;
+  }
+
+  .main-content h1 {
+    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  }
+
+  .main-content h2 {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+  }
 }

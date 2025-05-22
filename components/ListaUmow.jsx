@@ -143,10 +143,12 @@ const ListaUmow = () => {
               onClick={() => handleRowClick(row.id)}
               style={{ cursor: "pointer" }}
             >
-              <td>{row.imieNazwisko}</td>
-              <td>{new Date(row.dataPodpisania).toLocaleDateString()}</td>
-              <td>{row.handlowiec}</td>
-              <td>
+              <td data-label="Klient">{row.imieNazwisko}</td>
+              <td data-label="Data podpisania umowy">
+                {new Date(row.dataPodpisania).toLocaleDateString()}
+              </td>
+              <td data-label="Handlowiec">{row.handlowiec}</td>
+              <td data-label="Sprzedane produkty">
                 {row.przedaneProdukty.map((product, index) => (
                   <span
                     key={`${product.name}-${index}`}
@@ -158,12 +160,14 @@ const ListaUmow = () => {
                   </span>
                 ))}
               </td>
-              <td>
+              <td data-label="Uwagi handlowca">
                 <span className="tooltip" title={row.uwagiHandlowca}>
                   {truncateText(row.uwagiHandlowca, 200)}
                 </span>
               </td>
-              <td>{statusLabels[row.status] || "Brak statusu"}</td>
+              <td data-label="Status umowy">
+                {statusLabels[row.status] || "Brak statusu"}
+              </td>
             </tr>
           ))}
         </tbody>
