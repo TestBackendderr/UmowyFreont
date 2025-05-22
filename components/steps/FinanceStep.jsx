@@ -120,7 +120,7 @@ const FinanceStep = ({
         />
       </div>
       <div className="form-group">
-        <label>1. wpłata (kwota brutto)</label>
+        <label>Pierwsza wpłata(kwota brutto)</label>
         <input
           type="number"
           step="0.01"
@@ -131,7 +131,7 @@ const FinanceStep = ({
         />
       </div>
       <div className="form-group">
-        <label>Sposób płatności 1</label>
+        <label>Sposób płatności dla pierwszej wpłaty</label>
         <select
           name="sposobPlatnosci1"
           value={formData.sposobPlatnosci1}
@@ -147,7 +147,7 @@ const FinanceStep = ({
         </select>
       </div>
       <div className="form-group">
-        <label>Brak 2. wpłaty, klient wpłaca wszystko w 1.?</label>
+        <label>Brak drugiej wpłaty, klient wpłaca wszystko za pierwszą wpłatę?</label>
         <select
           name="czyJednaWplata"
           value={formData.czyJednaWplata}
@@ -162,7 +162,7 @@ const FinanceStep = ({
       {formData.czyJednaWplata === "nie" && (
         <>
           <div className="form-group">
-            <label>2. wpłata (kwota brutto)</label>
+            <label>Druga wpłata (kwota brutto)</label>
             <input
               type="number"
               step="0.01"
@@ -172,7 +172,7 @@ const FinanceStep = ({
             />
           </div>
           <div className="form-group">
-            <label>Sposób płatności 2. wpłaty</label>
+            <label>Sposób drugiej płatności </label>
             <select
               name="sposobPlatnosci2"
               value={formData.sposobPlatnosci2}
