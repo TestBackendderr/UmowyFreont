@@ -69,45 +69,9 @@ const FinanceStep = ({
   return (
     <div className="step">
       <h3>Finanse</h3>
-      <div className="form-group">
-        <label>Numer umowy</label>
-        <input
-          type="text"
-          name="numerUmowy"
-          value={formData.numerUmowy}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Operator OSD</label>
-        <select
-          name="operatorOsd"
-          value={formData.operatorOsd}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Wybierz --</option>
-          <option value="PGE Dystrybucja">PGE Dystrybucja</option>
-          <option value="Tauron Dystrybucja">Tauron Dystrybucja</option>
-          <option value="ENERGA Dystrybucja">ENERGA Dystrybucja</option>
-          <option value="Enea Dystrybucja">Enea Dystrybucja</option>
-          <option value="inny">Inny</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Czy właściciel instalacji jest właścicielem licznika?</label>
-        <select
-          name="czyWlascicielLicznika"
-          value={formData.czyWlascicielLicznika}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Wybierz --</option>
-          <option value="tak">Tak</option>
-          <option value="nie">Nie</option>
-        </select>
-      </div>
+      {/* Удален дублирующийся Numer umowy, так как он уже есть в PersonalDataStep */}
+      {/* Удален дублирующийся Operator OSD, так как он уже есть в PersonalDataStep */}
+      {/* Удален дублирующийся Czy właściciel instalacji jest właścicielem licznika?, так как он уже есть в PersonalDataStep */}
       <div className="form-group">
         <label>Cena brutto</label>
         <input

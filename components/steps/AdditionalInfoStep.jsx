@@ -41,31 +41,8 @@ const AdditionalInfoStep = ({
           <option value="Marcin Test">Marcin Test</option>
         </select>
       </div>
-      <div className="form-group">
-        <label>Rodzaj klienta</label>
-        <select
-          name="rodzajKlienta"
-          value={formData.rodzajKlienta}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Wybierz --</option>
-          <option value="Osoba fizyczna">Osoba fizyczna</option>
-          <option value="Działalność gospodarcza">
-            Działalność gospodarcza
-          </option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Data podpisania</label>
-        <input
-          type="date"
-          name="dataPodpisania"
-          value={formData.dataPodpisania}
-          onChange={handleChange}
-          required
-        />
-      </div>
+      {/* Удален дублирующийся Rodzaj klienta, так как он уже есть в PersonalDataStep */}
+      {/* Удален дублирующийся Data podpisania, так как он уже есть в PersonalDataStep */}
       <div className="navigation">
         <button
           type="button"
