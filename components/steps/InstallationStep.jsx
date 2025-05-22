@@ -1,6 +1,121 @@
-import React from "react";
+import React, { useEffect, useCallback, useState } from "react";
+import { debounce } from "lodash";
 
 const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
+  const [postcodesData, setPostcodesData] = useState([]);
+  const [lastProcessedPostalCode, setLastProcessedPostalCode] = useState(null);
+
+  useEffect(() => {
+    fetch("/kody_pocztowe.json")
+      .then((response) => response.json())
+      .then((data) => setPostcodesData(data))
+      .catch((error) => console.error("Error loading postcodes JSON:", error));
+  }, []);
+
+  const cleanAndCapitalize = (value = "", prefixToRemove = "") => {
+    let cleaned = value
+      .toLowerCase()
+      .replace(new RegExp(`^(${prefixToRemove}|miasto)\\s+`, "i"), "")
+      .trim();
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  };
+
+  const resetFields = (fieldPrefix) => {
+    const fieldsToReset = [
+      { name: `${fieldPrefix}Miejscowosc`, value: "" },
+      { name: `${fieldPrefix}Powiat`, value: "" },
+      { name: `${fieldPrefix}Wojewodztwo`, value: "" },
+    ];
+
+    fieldsToReset.forEach(({ name, value }) => {
+      handleChange({ target: { name, value } });
+    });
+  };
+
+  const fetchFromApi = async (postalCode, fieldPrefix) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?postalcode=${postalCode}&country=Poland&format=json&addressdetails=1&accept-language=pl`
+      );
+      const data = await response.json();
+
+      if (!data.length) {
+        resetFields(fieldPrefix);
+        return;
+      }
+
+      const { county, state, city } = data[0].address || {};
+
+      const region = state ? cleanAndCapitalize(state, "województwo") : "";
+      const district = county ? cleanAndCapitalize(county, "powiat") : "";
+      const locality = city ? cleanAndCapitalize(city, "miasto") : "";
+
+      const updates = [
+        { name: `${fieldPrefix}Miejscowosc`, value: locality },
+        { name: `${fieldPrefix}Wojewodztwo`, value: region },
+        { name: `${fieldPrefix}Powiat`, value: district },
+      ];
+
+      updates.forEach(({ name, value }) => {
+        handleChange({ target: { name, value } });
+      });
+    } catch (error) {
+      console.error("Error fetching from API:", error);
+      resetFields(fieldPrefix);
+    }
+  };
+
+  const fetchAddressDetails = useCallback(
+    (postalCode, fieldPrefix) => {
+      if (!postalCode || !/^\d{2}-\d{3}$/.test(postalCode)) {
+        resetFields(fieldPrefix);
+        setLastProcessedPostalCode(null);
+        return;
+      }
+
+      if (postalCode === lastProcessedPostalCode) {
+        return;
+      }
+
+      const addressData = postcodesData.find(
+        (entry) => entry.postcode === postalCode
+      );
+
+      if (addressData) {
+        let { region, district, locality } = addressData;
+
+        region = region ? cleanAndCapitalize(region, "województwo") : "";
+        district = district ? cleanAndCapitalize(district, "powiat") : "";
+        locality = locality ? cleanAndCapitalize(locality, "miasto") : "";
+
+        const updates = [
+          { name: `${fieldPrefix}Miejscowosc`, value: locality },
+          { name: `${fieldPrefix}Wojewodztwo`, value: region },
+          { name: `${fieldPrefix}Powiat`, value: district },
+        ];
+
+        updates.forEach(({ name, value }) => {
+          handleChange({ target: { name, value } });
+        });
+        setLastProcessedPostalCode(postalCode);
+      } else {
+        setLastProcessedPostalCode(postalCode);
+        fetchFromApi(postalCode, fieldPrefix);
+      }
+    },
+    [postcodesData, handleChange, lastProcessedPostalCode]
+  );
+
+  const debouncedFetchAddressDetails = useCallback(
+    debounce(fetchAddressDetails, 500),
+    [fetchAddressDetails]
+  );
+
+  const handlePostalCodeChange = (e) => {
+    handleChange(e);
+    debouncedFetchAddressDetails(e.target.value, "mi");
+  };
+
   return (
     <div className="step">
       <h3>Instalacja</h3>
@@ -65,7 +180,10 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
             type="text"
             name="miKod"
             value={formData.miKod}
-            onChange={handleChange}
+            onChange={handlePostalCodeChange}
+            required
+            pattern="\d{2}-\d{3}"
+            placeholder="np. 12-345"
           />
         </div>
         <div className="form-group">
@@ -75,6 +193,7 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
             name="miPowiat"
             value={formData.miPowiat}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="form-group">
@@ -84,6 +203,7 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
             name="miWojewodztwo"
             value={formData.miWojewodztwo}
             onChange={handleChange}
+            required
           />
         </div>
       </div>
@@ -138,7 +258,9 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
         </select>
       </div>
       <div className="form-group">
-        <label>Czy klient posiada zasięg internetu w miejscu montażu falownika?</label>
+        <label>
+          Czy klient posiada zasięg internetu w miejscu montażu falownika?
+        </label>
         <select
           name="zasiegInternetu"
           value={formData.zasiegInternetu}
@@ -189,50 +311,6 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
           type="text"
           name="mocPrzylaczeniowa"
           value={formData.mocPrzylaczeniowa}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Zabezpieczenie przedlicznikowe</label>
-        <input
-          type="text"
-          name="zabezpieczenie"
-          value={formData.zabezpieczenie}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Ilu fazowa instalacja?</label>
-        <select name="fazowa" value={formData.fazowa} onChange={handleChange}>
-          <option value="">-- Wybierz --</option>
-          <option value="jednofazowa">Jednofazowa</option>
-          <option value="trójfazowa">Trójfazowa</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Taryfa rozliczeniowa</label>
-        <input
-          type="text"
-          name="taryfa"
-          value={formData.taryfa}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Numer licznika</label>
-        <input
-          type="text"
-          name="numerLicznika"
-          value={formData.numerLicznika}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Numer PPM lub PPE</label>
-        <input
-          type="text"
-          name="numerPpm"
-          value={formData.numerPpm}
           onChange={handleChange}
         />
       </div>
