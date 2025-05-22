@@ -1,6 +1,13 @@
 import React from "react";
 
 const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
+  const handleInputFilter = (e, pattern) => {
+    const { name, value } = e.target;
+    if (value === "" || pattern.test(value)) {
+      handleChange(e);
+    }
+  };
+
   return (
     <div className="step">
       <h3>Dane osobowe</h3>
@@ -33,7 +40,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="numerUmowy"
           value={formData.numerUmowy}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^[A-Za-z0-9\- ]*$/)}
           required
         />
       </div>
@@ -43,7 +50,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="imieNazwisko"
           value={formData.imieNazwisko}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^[A-Za-z\s\-]*$/)}
           required
         />
       </div>
@@ -53,7 +60,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="telefon"
           value={formData.telefon}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*$/)}
           required
         />
       </div>
@@ -76,7 +83,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="peselNip"
           value={formData.peselNip}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*$/)}
           required
         />
       </div>
@@ -86,7 +93,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="dowod"
           value={formData.dowod}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^[A-Za-z0-9]*$/)}
           required
         />
       </div>
@@ -96,7 +103,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="tel2"
           value={formData.tel2}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*$/)}
         />
       </div>
       <div className="form-group">
@@ -105,7 +112,7 @@ const PersonalDataStep = ({ formData, handleChange, nextStep }) => {
           type="text"
           name="kontaktowyTel"
           value={formData.kontaktowyTel}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*$/)}
         />
       </div>
       <div className="form-group">

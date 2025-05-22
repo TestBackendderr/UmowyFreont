@@ -41,8 +41,6 @@ const AdditionalInfoStep = ({
           <option value="Marcin Test">Marcin Test</option>
         </select>
       </div>
-      {/* Удален дублирующийся Rodzaj klienta, так как он уже есть в PersonalDataStep */}
-      {/* Удален дублирующийся Data podpisania, так как он уже есть в PersonalDataStep */}
       <div className="navigation">
         <button
           type="button"

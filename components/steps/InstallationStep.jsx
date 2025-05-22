@@ -116,6 +116,13 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
     debouncedFetchAddressDetails(e.target.value, "mi");
   };
 
+  const handleInputFilter = (e, pattern) => {
+    const { name, value } = e.target;
+    if (value === "" || pattern.test(value)) {
+      handleChange(e);
+    }
+  };
+
   return (
     <div className="step">
       <h3>Instalacja</h3>
@@ -145,68 +152,70 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
           <option value="Inny">Inny</option>
         </select>
       </div>
-      <div className="sub-panel">
-        <h4>Miejsce instalacji (szczegóły)</h4>
-        <div className="form-group">
-          <label>Ulica</label>
-          <input
-            type="text"
-            name="miUlica"
-            value={formData.miUlica}
-            onChange={handleChange}
-          />
+      {formData.miejsceInstalacji === "Inny" && (
+        <div className="sub-panel">
+          <h4>Miejsce instalacji (szczegóły)</h4>
+          <div className="form-group">
+            <label>Ulica</label>
+            <input
+              type="text"
+              name="miUlica"
+              value={formData.miUlica}
+              onChange={(e) => handleInputFilter(e, /^[A-Za-z\s\-]*$/)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Nr domu</label>
+            <input
+              type="text"
+              name="miNrDomu"
+              value={formData.miNrDomu}
+              onChange={(e) => handleInputFilter(e, /^[A-Za-z0-9\s\/]*$/)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Miejscowość</label>
+            <input
+              type="text"
+              name="miMiejscowosc"
+              value={formData.miMiejscowosc}
+              onChange={(e) => handleInputFilter(e, /^[A-Za-z\s\-]*$/)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Kod pocztowy</label>
+            <input
+              type="text"
+              name="miKod"
+              value={formData.miKod}
+              onChange={handlePostalCodeChange}
+              required
+              pattern="\d{2}-\d{3}"
+              placeholder="np. 12-345"
+            />
+          </div>
+          <div className="form-group">
+            <label>Powiat</label>
+            <input
+              type="text"
+              name="miPowiat"
+              value={formData.miPowiat}
+              onChange={(e) => handleInputFilter(e, /^[A-Za-z\s\-]*$/)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Województwo</label>
+            <input
+              type="text"
+              name="miWojewodztwo"
+              value={formData.miWojewodztwo}
+              onChange={(e) => handleInputFilter(e, /^[A-Za-z\s\-]*$/)}
+              required
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label>Nr domu</label>
-          <input
-            type="text"
-            name="miNrDomu"
-            value={formData.miNrDomu}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Miejscowość</label>
-          <input
-            type="text"
-            name="miMiejscowosc"
-            value={formData.miMiejscowosc}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Kod pocztowy</label>
-          <input
-            type="text"
-            name="miKod"
-            value={formData.miKod}
-            onChange={handlePostalCodeChange}
-            required
-            pattern="\d{2}-\d{3}"
-            placeholder="np. 12-345"
-          />
-        </div>
-        <div className="form-group">
-          <label>Powiat</label>
-          <input
-            type="text"
-            name="miPowiat"
-            value={formData.miPowiat}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Województwo</label>
-          <input
-            type="text"
-            name="miWojewodztwo"
-            value={formData.miWojewodztwo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-      </div>
+      )}
       <div className="form-group">
         <label>Miejsce montażu instalacji</label>
         <select
@@ -302,7 +311,7 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
           type="text"
           name="numerDzialki"
           value={formData.numerDzialki}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^[0-9\/]*$/)}
         />
       </div>
       <div className="form-group">
@@ -311,7 +320,7 @@ const InstallationStep = ({ formData, handleChange, prevStep, nextStep }) => {
           type="text"
           name="mocPrzylaczeniowa"
           value={formData.mocPrzylaczeniowa}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*\.?\d*$/)}
         />
       </div>
       <div className="navigation">

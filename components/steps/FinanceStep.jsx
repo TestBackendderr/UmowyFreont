@@ -66,12 +66,16 @@ const FinanceStep = ({
     }
   };
 
+  const handleInputFilter = (e, pattern) => {
+    const { name, value } = e.target;
+    if (value === "" || pattern.test(value)) {
+      handleChange(e);
+    }
+  };
+
   return (
     <div className="step">
       <h3>Finanse</h3>
-      {/* Удален дублирующийся Numer umowy, так как он уже есть в PersonalDataStep */}
-      {/* Удален дублирующийся Operator OSD, так как он уже есть в PersonalDataStep */}
-      {/* Удален дублирующийся Czy właściciel instalacji jest właścicielem licznika?, так как он уже есть в PersonalDataStep */}
       <div className="form-group">
         <label>Cena brutto</label>
         <input
@@ -79,7 +83,7 @@ const FinanceStep = ({
           step="0.01"
           name="cenaBrutto"
           value={formData.cenaBrutto}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*\.?\d*$/)}
           required
         />
       </div>
@@ -90,7 +94,7 @@ const FinanceStep = ({
           step="0.01"
           name="pierwszaWplata"
           value={formData.pierwszaWplata}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*\.?\d*$/)}
           required
         />
       </div>
@@ -132,7 +136,7 @@ const FinanceStep = ({
               step="0.01"
               name="drugaWplata"
               value={formData.drugaWplata}
-              onChange={handleChange}
+              onChange={(e) => handleInputFilter(e, /^\d*\.?\d*$/)}
             />
           </div>
           <div className="form-group">
@@ -158,7 +162,7 @@ const FinanceStep = ({
           type="number"
           name="powierzchniaDomu"
           value={formData.powierzchniaDomu}
-          onChange={handleChange}
+          onChange={(e) => handleInputFilter(e, /^\d*$/)}
         />
       </div>
       <div className="form-group">
