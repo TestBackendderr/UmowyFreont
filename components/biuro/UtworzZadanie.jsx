@@ -22,6 +22,14 @@ const mockArchivedTasks = {
   ],
 };
 
+
+const mockUsersByRole = {
+  Handlowiec: ["Handlowiec1", "Handlowiec2", "Handlowiec3"],
+  "Dział Realizacji": ["Realizacja1", "Realizacja2"],
+  "Dział Logistyki": ["Logistyka1", "Logistyka2"],
+  BOK: ["BOK1", "BOK2"],
+};
+
 const roles = ["Handlowiec", "Dział Realizacji", "Dział Logistyki", "BOK"];
 
 const UtworzZadanie = ({ umowaId, umowa }) => {
@@ -30,10 +38,12 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
   const [newTask, setNewTask] = useState({
     date: "",
     createdBy: "",
-    assignedTo: "",
+    role: "", 
+    assignedTo: "", 
     title: "",
     description: "",
   });
+  const [selectedRole, setSelectedRole] = useState(""); 
   const parsedUmowaId = parseInt(umowaId, 10);
 
   const activeTasks = mockActiveTasks[parsedUmowaId] || [];
@@ -45,32 +55,46 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
 
   const toggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
+   
+    setSelectedRole("");
+    setNewTask((prev) => ({ ...prev, role: "", assignedTo: "" }));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewTask((prev) => ({ ...prev, [name]: value }));
+    if (name === "role") {
+      setSelectedRole(value); 
+      setNewTask((prev) => ({ ...prev, assignedTo: "" })); 
+    }
   };
 
   const handleAcceptTask = () => {
     if (
       newTask.date &&
       newTask.createdBy &&
-      newTask.assignedTo &&
+      newTask.role &&
       newTask.title &&
       newTask.description
     ) {
       const taskText = `${newTask.title} (dodano ${new Date().toLocaleString(
         "pl-PL",
         { dateStyle: "short", timeStyle: "short" }
-      )})`;
+      )}${newTask.assignedTo ? `, przypisano: ${newTask.assignedTo}` : ", przypisano do roli: " + newTask.role})`;
       mockActiveTasks[parsedUmowaId] = [
         ...(mockActiveTasks[parsedUmowaId] || []),
         taskText,
       ];
-      setNewTask({ date: "", createdBy: "", assignedTo: "", title: "", description: "" });
+      setNewTask({
+        date: "",
+        createdBy: "",
+        role: "",
+        assignedTo: "",
+        title: "",
+        description: "",
+      });
+      setSelectedRole("");
       setShowCreateForm(false);
-      // Здесь можно добавить логику сохранения в реальный бэкенд
     } else {
       alert("Wypełnij wszystkie pola!");
     }
@@ -110,6 +134,30 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
       {showCreateForm && (
         <div className="task-creation-form">
           <div className="form-group">
+            <label>Wybierz rolę:</label>
+            <select name="role" value={newTask.role} onChange={handleInputChange}>
+              <option value="">Wybierz rolę</option>
+              {roles.map((role) => (
+                <option key={role} value={role}>
+                  {role}
+                </option>
+              ))}
+            </select>
+          </div>
+          {newTask.role && (
+            <div className="form-group">
+              <label>Odpowiedzialny (opcjonalne):</label>
+              <select name="assignedTo" value={newTask.assignedTo} onChange={handleInputChange}>
+                <option value="">Wszyscy z roli (wybiorą sami)</option>
+                {mockUsersByRole[newTask.role].map((user) => (
+                  <option key={user} value={user}>
+                    {user}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="form-group">
             <label>Na kiedy:</label>
             <input
               type="datetime-local"
@@ -127,21 +175,6 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
               onChange={handleInputChange}
               placeholder="Wpisz nazwisko"
             />
-          </div>
-          <div className="form-group">
-            <label>Odpowiedzialny:</label>
-            <select
-              name="assignedTo"
-              value={newTask.assignedTo}
-              onChange={handleInputChange}
-            >
-              <option value="">Wybierz rolę/użytkownika</option>
-              {roles.map((role) => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
           </div>
           <div className="form-group">
             <label>Tytuł:</label>
