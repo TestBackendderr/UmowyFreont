@@ -16,7 +16,7 @@ const mockData = [
   {
     id: 2,
     date: "2025-05-23T14:03:00",
-    createdBy: "Bartłomiej Klekner Dominika Niewęgłowska",
+    createdBy: "Bartłomiej Klekner ",
     assignedTo: "BOK",
     title: "Zadzwoń do klienta po umowie",
     description: "Skontaktuj się z klientem Jan Kowalski w sprawie podpisanej umowy.",
