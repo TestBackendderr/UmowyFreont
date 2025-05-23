@@ -55,9 +55,9 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
 
   const toggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
-   
+    
     setSelectedRole("");
-    setNewTask((prev) => ({ ...prev, role: "", assignedTo: "" }));
+    setNewTask((prev) => ({ ...prev, role: "", assignedTo: "", date: "" }));
   };
 
   const handleInputChange = (e) => {
@@ -77,10 +77,11 @@ const UtworzZadanie = ({ umowaId, umowa }) => {
       newTask.title &&
       newTask.description
     ) {
-      const taskText = `${newTask.title} (dodano ${new Date().toLocaleString(
-        "pl-PL",
-        { dateStyle: "short", timeStyle: "short" }
-      )}${newTask.assignedTo ? `, przypisano: ${newTask.assignedTo}` : ", przypisano do roli: " + newTask.role})`;
+      const creationDate = new Date().toLocaleString("pl-PL", {
+        dateStyle: "short",
+        timeStyle: "short",
+      });
+      const taskText = `${newTask.title} (dodano ${creationDate}${newTask.assignedTo ? `, przypisano: ${newTask.assignedTo}` : ", przypisano do roli: " + newTask.role})`;
       mockActiveTasks[parsedUmowaId] = [
         ...(mockActiveTasks[parsedUmowaId] || []),
         taskText,
