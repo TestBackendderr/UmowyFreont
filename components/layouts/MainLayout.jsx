@@ -11,7 +11,7 @@ export default function MainLayout({ children }) {
       <div className="content">
         <Leftside />
         <main>{children}</main>
-        <Rightside />
+        {/* <Rightside /> */}
       </div>
     </div>
   );
