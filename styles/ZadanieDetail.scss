@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f7fa; 
+  background-color: #f5f7fa;
   box-sizing: border-box;
 
   .main-content {
@@ -11,8 +11,8 @@
     margin: 1.5rem;
     margin-left: 250px;
     margin-top: 4.5rem;
-    margin-right: 320px; 
-    max-width: calc(100% - 570px); 
+    margin-right: 320px;
+    max-width: calc(100% - 570px);
     color: #1a252f;
 
     .user-info {
@@ -52,7 +52,7 @@
       gap: 1.5rem;
 
       .biuro2-left {
-        flex: 0 0 80%; 
+        flex: 0 0 80%;
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
@@ -63,7 +63,7 @@
           gap: 1.5rem;
 
           .biuro2-section {
-            background-color: #ffffff; 
+            background-color: #ffffff;
             padding: 1rem;
             border-radius: 0.5rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -136,15 +136,20 @@
                     background-color: #f39c12;
                     color: white;
                     border: none;
-                    border-radius: 0.375rem;
+                    border-radius: 8px;
                     font-size: clamp(0.9rem, 2vw, 1rem);
-                    font-weight: 500;
+                    font-weight: 600;
                     cursor: pointer;
-                    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+                    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
                     &:hover {
                       background-color: #e67e22;
-                      transform: scale(1.02);
+                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                    }
+
+                    &:active {
+                      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
                     }
                   }
                 }
@@ -157,21 +162,27 @@
           margin-top: 1.5rem;
           display: flex;
           gap: 0.75rem;
+          flex-wrap: wrap;
 
           .status-save-button {
             padding: 0.75rem 1.5rem;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 0.375rem;
+            border-radius: 8px;
             font-size: clamp(0.9rem, 2vw, 1rem);
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
             &:hover {
               background-color: #0056b3;
-              transform: scale(1.02);
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            &:active {
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             }
 
             &.back-button {
@@ -188,6 +199,78 @@
               &:hover {
                 background-color: #218838;
               }
+            }
+
+            &.postpone-button {
+              background-color: #f39c12;
+
+              &:hover {
+                background-color: #e67e22;
+              }
+            }
+
+            &.confirm-button {
+              background-color: #28a745;
+
+              &:hover {
+                background-color: #218838;
+              }
+            }
+
+            &.cancel-button {
+              background-color: #dc3545;
+
+              &:hover {
+                background-color: #c82333;
+              }
+            }
+          }
+
+          .postpone-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            border-radius: 12px;
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 400px;
+
+            .form-group {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+
+              label {
+                font-size: clamp(0.95rem, 2vw, 1rem);
+                font-weight: 600;
+                color: #2c3e50;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+              }
+
+              input[type="datetime-local"] {
+                padding: 0.75rem;
+                border: 2px solid #e0e6ed;
+                border-radius: 8px;
+                font-size: clamp(0.9rem, 2vw, 1rem);
+                background-color: #fff;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                width: 100%;
+
+                &:focus {
+                  border-color: #3498db;
+                  box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+                  outline: none;
+                }
+              }
+            }
+
+            .postpone-actions {
+              display: flex;
+              gap: 1rem;
+              justify-content: flex-end;
             }
           }
         }
@@ -226,6 +309,7 @@
               justify-content: space-between;
               font-size: 12px;
               color: #7f8c8d;
+              flex-direction: column;
 
               span {
                 font-size: clamp(0.8rem, 1.8vw, 0.9rem);
@@ -261,9 +345,9 @@
 
   @media (min-width: 1200px) {
     .main-content {
-      margin-left: 270px; 
+      margin-left: 270px;
       margin-right: 340px;
-      max-width: calc(100% - 610px); 
+      max-width: calc(100% - 610px);
       padding: 1.75rem;
     }
   }
@@ -296,6 +380,10 @@
           width: 100%;
           max-height: none;
         }
+
+        .postpone-form {
+          max-width: 100%;
+        }
       }
     }
   }
@@ -322,6 +410,17 @@
           table td {
             padding: 6px;
             font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+          }
+        }
+
+        .postpone-form {
+          padding: 1rem;
+          gap: 1rem;
+
+          .form-group {
+            input[type="datetime-local"] {
+              padding: 0.5rem;
+            }
           }
         }
       }

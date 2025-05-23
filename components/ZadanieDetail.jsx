@@ -43,6 +43,10 @@ const ZadanieDetail = () => {
   const [isAccepted, setIsAccepted] = useState(false);
   const [history, setHistory] = useState([]);
   const [assignedPerson, setAssignedPerson] = useState(null);
+  const [showPostponeForm, setShowPostponeForm] = useState(false);
+  const [postponeData, setPostponeData] = useState({
+    newDate: "",
+  });
 
   useEffect(() => {
     if (id) {
@@ -91,6 +95,28 @@ const ZadanieDetail = () => {
         user: user?.name || "Użytkownik",
       },
     ]);
+  };
+
+  const handlePostponeTask = () => {
+    if (postponeData.newDate) {
+      setTask({ ...task, date: postponeData.newDate });
+      setHistory((prev) => [
+        ...prev,
+        {
+          action: "Przeniesiono zadanie",
+          date: new Date().toISOString(),
+          user: user?.name || "Użytkownik",
+          details: `Nowa data: ${new Date(postponeData.newDate).toLocaleString("pl-PL", {
+            dateStyle: "short",
+            timeStyle: "short",
+          })}`,
+        },
+      ]);
+      setShowPostponeForm(false);
+      setPostponeData({ newDate: "" });
+    } else {
+      alert("Wybierz nową datę!");
+    }
   };
 
   const handleBack = () => {
@@ -203,9 +229,46 @@ const ZadanieDetail = () => {
                   Przyjmij zadanie
                 </button>
               ) : task.status !== "Zakończona" ? (
-                <button className="status-save-button" onClick={handleCompleteTask}>
-                  Zaliczone zadanie
-                </button>
+                <>
+                  <button className="status-save-button" onClick={handleCompleteTask}>
+                    Zaliczone zadanie
+                  </button>
+                  <button
+                    className="status-save-button postpone-button"
+                    onClick={() => setShowPostponeForm(true)}
+                  >
+                    Przenieś zadanie
+                  </button>
+                  {showPostponeForm && (
+                    <div className="postpone-form">
+                      <div className="form-group">
+                        <label>Nowa data i czas:</label>
+                        <input
+                          type="datetime-local"
+                          name="newDate"
+                          value={postponeData.newDate}
+                          onChange={(e) =>
+                            setPostponeData({ ...postponeData, newDate: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="postpone-actions">
+                        <button
+                          className="status-save-button confirm-button"
+                          onClick={handlePostponeTask}
+                        >
+                          Zapisz
+                        </button>
+                        <button
+                          className="status-save-button cancel-button"
+                          onClick={() => setShowPostponeForm(false)}
+                        >
+                          Anuluj
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               ) : null}
               <button
                 className="status-save-button back-button"
@@ -229,6 +292,7 @@ const ZadanieDetail = () => {
                       })}
                     </span>
                     <span>{entry.user}</span>
+                    {entry.details && <span>{entry.details}</span>}
                   </div>
                 </div>
               ))}
