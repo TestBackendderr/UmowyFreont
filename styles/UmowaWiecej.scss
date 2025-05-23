@@ -101,6 +101,85 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
+
+.utwiedz-zadanie-container {
+  margin-top: 1rem; 
+}
+
+.utwiedz-zadanie .task-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.utwiedz-zadanie .task-list li {
+  padding: 0.5rem;
+  background-color: #fff;
+  margin-bottom: 0.25rem;
+  border-radius: 0.25rem;
+  border-left: 4px solid #3498db;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateX(5px);
+  }
+}
+
+.utwiedz-zadanie .archived-tasks {
+  margin-top: 1rem;
+}
+
+.utwiedz-zadanie .archived-tasks h4 {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.utwiedz-zadanie .task-creation-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 0.375rem;
+  border-left: 4px solid #28a745;
+}
+
+.utwiedz-zadanie .task-creation-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.utwiedz-zadanie .task-creation-form label {
+  display: block;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.utwiedz-zadanie .task-creation-form input,
+.utwiedz-zadanie .task-creation-form select,
+.utwiedz-zadanie .task-creation-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+.utwiedz-zadanie .task-creation-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.utwiedz-zadanie .create-task-button {
+  background-color: #28a745;
+  margin-top: 0.5rem;
+}
+
+.utwiedz-zadanie .create-task-button:hover {
+  background-color: #218838;
+}
+
 .umowa-section .products-selection {
   display: flex;
   flex-wrap: wrap;
@@ -321,6 +400,10 @@
     max-height: none;
     width: 100%;
   }
+
+  .utwiedz-zadanie-container {
+    width: 100%;
+  }
 }
 
 @media (max-width: 576px) {
@@ -353,5 +436,32 @@
 
   .main-content h2 {
     font-size: clamp(1rem, 2.5vw, 1.2rem);
+  }
+
+  .utwiedz-zadanie .task-list li {
+    padding: 0.375rem;
+  }
+
+  .utwiedz-zadanie .task-creation-form {
+    padding: 0.5rem;
+  }
+
+  .utwiedz-zadanie .task-creation-form .form-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .utwiedz-zadanie .task-creation-form label {
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+  }
+
+  .utwiedz-zadanie .task-creation-form input,
+  .utwiedz-zadanie .task-creation-form select,
+  .utwiedz-zadanie .task-creation-form textarea {
+    padding: 0.375rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  }
+
+  .utwiedz-zadanie .task-creation-form textarea {
+    min-height: 80px;
   }
 }

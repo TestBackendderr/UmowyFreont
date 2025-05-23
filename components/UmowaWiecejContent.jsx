@@ -7,6 +7,7 @@ import DaneInstalacji from "./biuro/DaneInstalacji";
 import Dokumenty from "./biuro/Dokumenty";
 import DataZlozenia from "./biuro/DataZlozenia";
 import Historia from "./biuro/Historia";
+import UtworzZadanie from "./biuro/UtworzZadanie";
 
 const UmowaWiecejContent = ({ umowa, umowaId }) => {
   const parsedUmowaId = parseInt(umowaId, 10);
@@ -28,6 +29,7 @@ const UmowaWiecejContent = ({ umowa, umowaId }) => {
           </div>
         </div>
         <Historia umowa={umowa} />
+        <UtworzZadanie umowaId={parsedUmowaId} umowa={umowa} />
       </div>
     </div>
   );
