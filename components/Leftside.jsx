@@ -12,6 +12,7 @@ const Leftside = ({ isOpen, onClose }) => {
         { name: "Spotkania", path: "/spotkania", icon: "📅" },
         { name: "Oferty", path: "/oferty", icon: "📋" },
         { name: "Umowy", path: "/umowy", icon: "📝" },
+        { name: "Zadania", path: "/listazadan", icon: "📋" },
       ];
     }
 

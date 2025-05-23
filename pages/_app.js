@@ -10,6 +10,8 @@ import "../styles/Home.scss";
 import "../styles/UtworzUmowe.scss";
 import "../styles/ListaUmow.scss";
 import "../styles/UmowaWiecej.scss";
+import "../styles/ListaZadan.scss"; // Новый импорт
+import "../styles/ZadanieDetail.scss"; // Новый импорт
 import { AuthProvider } from "../context/AuthContext";
 
 export default function MyApp({ Component, pageProps }) {
