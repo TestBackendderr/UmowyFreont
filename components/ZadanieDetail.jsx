@@ -2,120 +2,107 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 
-const mockData = [
-  {
-    id: 1,
-    date: "2025-05-23T14:03:00",
-    createdBy: "SYSTEM",
-    assignedTo: "BOK",
-    title: "Sprawdź umowę",
-    description: "Sprawdź umowę numer 12345 pod kątem zgodności danych klienta.",
-    status: "Oczekuje",
-    linkedContract: "KK31/12/12",
-  },
-  {
-    id: 2,
-    date: "2025-05-23T14:03:00",
-    createdBy: "Bartłomiej Klekner ",
-    assignedTo: "BOK",
-    title: "Zadzwoń do klienta po umowie",
-    description: "Skontaktuj się z klientem Jan Kowalski w sprawie podpisanej umowy.",
-    status: "Oczekuje",
-    linkedContract: "KK32/12/12",
-  },
-  {
-    id: 3,
-    date: "2025-05-22T10:00:00",
-    createdBy: "SYSTEM",
-    assignedTo: "BOK",
-    title: "Zadzwoń z ponagleniem płatności",
-    description: "Przypomnij klientowi Anna Nowak o zaległej płatności za instalację.",
-    status: "Oczekuje",
-    linkedContract: "KK33/12/12",
-  },
-];
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+const statusDisplayMap = {
+  Oczekuje: "Oczekuje",
+  WTrakcie: "W trakcie",
+  Zakonczona: "Zakończona",
+  Anulowana: "Anulowana",
+  Archived: "Archiwizowana",
+};
 
 const ZadanieDetail = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
   const [task, setTask] = useState(null);
   const [isAccepted, setIsAccepted] = useState(false);
-  const [history, setHistory] = useState([]);
   const [assignedPerson, setAssignedPerson] = useState(null);
-  const [showPostponeForm, setShowPostponeForm] = useState(false);
-  const [postponeData, setPostponeData] = useState({
-    newDate: "",
-  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      const foundTask = mockData.find((task) => task.id === parseInt(id));
-      setTask(foundTask);
+    const fetchTask = async () => {
+      if (!router.isReady || !id || !accessToken || !user) {
+        if (!router.isReady) return;
+        setError("Brak autoryzacji lub ID zadania");
+        setLoading(false);
+        return;
+      }
 
-      setHistory([
-        {
-          action: "Utworzono zadanie",
-          date: foundTask.date,
-          user: foundTask.createdBy,
+      try {
+        setLoading(true);
+        const response = await fetch(`${apiUrl}/tasks/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Błąd podczas pobierania danych zadania");
+        }
+
+        const data = await response.json();
+        setTask(data);
+        setAssignedPerson(data.assignedTo?.name || null);
+        setIsAccepted(
+          data.status === "WTrakcie" || data.status === "Zakonczona"
+        );
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchTask();
+  }, [id, accessToken, user, router.isReady]);
+
+  const handleAcceptTask = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/tasks/${id}/assign`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-        {
-          action: "Przyjęto zadanie",
-          date: "2025-05-23T14:05:00",
-          user: "Jan Kowalski",
-        },
-        {
-          action: "Zakończono zadanie",
-          date: "2025-05-23T15:00:00",
-          user: "Jan Kowalski",
-        },
-      ]);
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas przyjmowania zadania");
+      }
+
+      const updatedTask = await response.json();
+      setTask(updatedTask);
+      setIsAccepted(true);
+      setAssignedPerson(user?.name || "Użytkownik");
+    } catch (err) {
+      setError(err.message);
     }
-  }, [id]);
-
-  const handleAcceptTask = () => {
-    setIsAccepted(true);
-    setHistory((prev) => [
-      ...prev.filter((entry) => entry.action !== "Przyjęto zadanie"),
-      {
-        action: "Przyjęto zadanie",
-        date: new Date().toISOString(),
-        user: user?.name || "Użytkownik",
-      },
-    ]);
   };
 
-  const handleCompleteTask = () => {
-    setTask({ ...task, status: "Zakończona" });
-    setHistory((prev) => [
-      ...prev.filter((entry) => entry.action !== "Zakończono zadanie"),
-      {
-        action: "Zakończono zadanie",
-        date: new Date().toISOString(),
-        user: user?.name || "Użytkownik",
-      },
-    ]);
-  };
-
-  const handlePostponeTask = () => {
-    if (postponeData.newDate) {
-      setTask({ ...task, date: postponeData.newDate });
-      setHistory((prev) => [
-        ...prev,
-        {
-          action: "Przeniesiono zadanie",
-          date: new Date().toISOString(),
-          user: user?.name || "Użytkownik",
-          details: `Nowa data: ${new Date(postponeData.newDate).toLocaleString("pl-PL", {
-            dateStyle: "short",
-            timeStyle: "short",
-          })}`,
+  const handleCompleteTask = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/tasks/${id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-      ]);
-      setShowPostponeForm(false);
-      setPostponeData({ newDate: "" });
-    } else {
-      alert("Wybierz nową datę!");
+        body: JSON.stringify({ status: "Zakonczona" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas kończenia zadania");
+      }
+
+      const updatedTask = await response.json();
+      setTask(updatedTask);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -124,68 +111,80 @@ const ZadanieDetail = () => {
   };
 
   const handleViewContract = () => {
-    alert(`Przejdź do umowy: ${task.linkedContract}`);
+    if (task && task.umowa && task.umowa.id) {
+      router.push(`/umowa/${task.umowa.id}`);
+    } else {
+      alert("Brak powiązanej umowy");
+    }
   };
 
-  const handleAssignToSelf = () => {
-    setAssignedPerson(user?.name || "Użytkownik");
-    setHistory((prev) => [
-      ...prev,
-      {
-        action: "Przypisano zadanie",
-        date: new Date().toISOString(),
-        user: user?.name || "Użytkownik",
-      },
-    ]);
+  const handleAssignToSelf = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/tasks/${id}/assign`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas przypisywania zadania");
+      }
+
+      const updatedTask = await response.json();
+      setTask(updatedTask);
+      setAssignedPerson(user?.name || "Użytkownik");
+      setIsAccepted(true);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
-  if (!task) {
-    return <div>Ładowanie...</div>;
-  }
+  if (loading) return <div>Ładowanie...</div>;
+  if (error) return <div>Błąd: {error}</div>;
+  if (!task) return <div>Zadanie nie znalezione</div>;
 
   return (
     <div className="zadanie-detail-container">
       <div className="main-content">
-        <div className="user-info">
-          <span>USER --- GRUPA</span>
-          <span>
-            {user?.name || "Dominika"} --- {task.assignedTo}
-          </span>
-        </div>
         <h1>{task.title}</h1>
         <div className="zadanie-detail">
           <div className="biuro2-left">
             <div className="biuro2-content">
               <div className="biuro2-section">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Data na Kiedy</th>
-                      <th>Utworzone przez</th>
-                      <th>Odpowiedzialny</th>
-                      <th>Tytuł</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        {new Date(task.date).toLocaleString("pl-PL", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </td>
-                      <td>{task.createdBy}</td>
-                      <td>{task.assignedTo}</td>
-                      <td>{task.title}</td>
-                      <td>
-                        <span className={`product-tag status-${task.status.toLowerCase()}`}>
-                          {task.status}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="task-info-grid">
+                  <div className="info-item">
+                    <span className="info-label">Data na Kiedy:</span>
+                    <span className="info-value">
+                      {new Date(task.dueDate).toLocaleString("pl-PL", {
+                        dateStyle: "short",
+                      })}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Utworzone przez:</span>
+                    <span className="info-value">{task.createdBy?.name}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Odpowiedzialny:</span>
+                    <span className="info-value">
+                      {task.assignedTo?.name || task.role}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Tytuł:</span>
+                    <span className="info-value">{task.title}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Status:</span>
+                    <span
+                      className={`status-tag status-${task.status.toLowerCase()}`}
+                    >
+                      {statusDisplayMap[task.status] || task.status}
+                    </span>
+                  </div>
+                </div>
                 <div className="task-components">
                   <div className="component-section assigned-section">
                     <h3>Osoby przypisane do zadania</h3>
@@ -217,7 +216,7 @@ const ZadanieDetail = () => {
                       className="status-save-button contract-link"
                       onClick={handleViewContract}
                     >
-                      Idź do umowy (klik do źródła umowy)
+                      Idź do umowy
                     </button>
                   </div>
                 </div>
@@ -225,51 +224,24 @@ const ZadanieDetail = () => {
             </div>
             <div className="task-actions">
               {!isAccepted ? (
-                <button className="status-save-button" onClick={handleAcceptTask}>
+                <button
+                  className="status-save-button"
+                  onClick={handleAcceptTask}
+                >
                   Przyjmij zadanie
                 </button>
-              ) : task.status !== "Zakończona" ? (
-                <>
-                  <button className="status-save-button" onClick={handleCompleteTask}>
-                    Zaliczone zadanie
-                  </button>
-                  <button
-                    className="status-save-button postpone-button"
-                    onClick={() => setShowPostponeForm(true)}
-                  >
-                    Przenieś zadanie
-                  </button>
-                  {showPostponeForm && (
-                    <div className="postpone-form">
-                      <div className="form-group">
-                        <label>Nowa data i czas:</label>
-                        <input
-                          type="datetime-local"
-                          name="newDate"
-                          value={postponeData.newDate}
-                          onChange={(e) =>
-                            setPostponeData({ ...postponeData, newDate: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="postpone-actions">
-                        <button
-                          className="status-save-button confirm-button"
-                          onClick={handlePostponeTask}
-                        >
-                          Zapisz
-                        </button>
-                        <button
-                          className="status-save-button cancel-button"
-                          onClick={() => setShowPostponeForm(false)}
-                        >
-                          Anuluj
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : null}
+              ) : task.status !== "Zakonczona" ? (
+                <button
+                  className="status-save-button"
+                  onClick={handleCompleteTask}
+                >
+                  Zakończ zadanie
+                </button>
+              ) : (
+                <button className="status-save-button" disabled>
+                  Zadanie zakończone
+                </button>
+              )}
               <button
                 className="status-save-button back-button"
                 onClick={handleBack}
@@ -281,21 +253,30 @@ const ZadanieDetail = () => {
           <aside className="historia task-list-sidebar">
             <h2>Historia Zadania</h2>
             <div className="task-list">
-              {history.map((entry, index) => (
-                <div key={index} className="task-item">
-                  <div className="task-title">{entry.action}</div>
-                  <div className="task-meta">
-                    <span>
-                      {new Date(entry.date).toLocaleString("pl-PL", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </span>
-                    <span>{entry.user}</span>
-                    {entry.details && <span>{entry.details}</span>}
-                  </div>
-                </div>
-              ))}
+              {task.history && task.history.length > 0 ? (
+                task.history.map((entry, index) => {
+                  const parts = entry.split(": ");
+                  const action = parts[0];
+                  const rawDate = parts[1];
+                  const date = new Date(rawDate);
+
+                  return (
+                    <div key={index} className="task-item">
+                      <div className="task-title">{action}</div>
+                      <div className="task-meta">
+                        <span>
+                          {date.toLocaleString("pl-PL", {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p>Brak historii dla tego zadania.</p>
+              )}
             </div>
           </aside>
         </div>

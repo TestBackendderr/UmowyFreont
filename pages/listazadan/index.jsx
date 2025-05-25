@@ -4,42 +4,57 @@ import { useAuth } from "@/context/AuthContext";
 import MainLayout from "@/components/layouts/MainLayout";
 import withAuth from "@/utils/withAuth";
 
-const mockData = [
-  {
-    id: 1,
-    date: "2025-05-23T14:03:00",
-    createdBy: "SYSTEM",
-    assignedTo: "BOK",
-    title: "Sprawdź umowę",
-    description: "Sprawdź umowę numer 12345 pod kątem zgodności danych klienta.",
-    status: "Oczekuje",
-  },
-  {
-    id: 2,
-    date: "2025-05-23T14:03:00",
-    createdBy: "Bartłomiej Klekner ",
-    assignedTo: "BOK",
-    title: "Zadzwoń do klienta po umowie",
-    description: "Skontaktuj się z klientem Jan Kowalski w sprawie podpisanej umowy.",
-    status: "Oczekuje",
-  },
-  {
-    id: 3,
-    date: "2025-05-22T10:00:00",
-    createdBy: "SYSTEM",
-    assignedTo: "BOK",
-    title: "Zadzwoń z ponagleniem płatności",
-    description: "Przypomnij klientowi Anna Nowak o zaległej płatности za instalację.",
-    status: "Zakończona",
-  },
-];
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+const statusDisplayMap = {
+  Oczekuje: "Oczekuje",
+  WTrakcie: "W trakcie",
+  Zakonczona: "Zakończona",
+  Anulowana: "Anulowana",
+  Archived: "Archiwizowana",
+};
 
 const ListaZadan = () => {
   const { user, accessToken } = useAuth();
   const router = useRouter();
-  const [tasks, setTasks] = useState(mockData);
+  const [tasks, setTasks] = useState([]);
   const [sortBy, setSortBy] = useState("date");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!accessToken || !user) {
+        setError("Brak autoryzacji");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${apiUrl}/tasks/user`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Błąd podczas pobierania zadań");
+        }
+
+        const data = await response.json();
+        setTasks(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [accessToken, user]);
 
   const handleRowClick = (id) => {
     router.push(`/zadanie/${id}`);
@@ -49,41 +64,70 @@ const ListaZadan = () => {
     const sortedTasks = [...tasks].sort((a, b) => {
       if (criteria === "date") {
         return sortOrder === "asc"
-          ? new Date(a.date) - new Date(b.date)
-          : new Date(b.date) - new Date(a.date);
+          ? new Date(a.dueDate) - new Date(b.dueDate)
+          : new Date(b.dueDate) - new Date(a.dueDate);
       } else if (criteria === "status") {
         return sortOrder === "asc"
-          ? a.status.localeCompare(b.status)
-          : b.status.localeCompare(a.status);
+          ? (statusDisplayMap[a.status] || a.status).localeCompare(
+              statusDisplayMap[b.status] || b.status
+            )
+          : (statusDisplayMap[b.status] || b.status).localeCompare(
+              statusDisplayMap[a.status] || a.status
+            );
       }
       return 0;
     });
+
     setTasks(sortedTasks);
     setSortBy(criteria);
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setSortOrder(sortBy === criteria && sortOrder === "asc" ? "desc" : "asc");
   };
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="listaZadanContainer">
+          <div className="mainContent">
+            <h2>Lista Zadań</h2>
+            <p>Ładowanie...</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <MainLayout>
+        <div className="listaZadanContainer">
+          <div className="mainContent">
+            <h2>Lista Zadań</h2>
+            <p>Błąd: {error}</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  const filteredTasks = tasks.filter((task) => task.status !== "Archived");
 
   return (
     <MainLayout>
-      <div className="lista-zadan-container">
-        <div className="main-content">
+      <div className="listaZadanContainer">
+        <div className="mainContent">
           <h2>Lista Zadań</h2>
-          <div className="sort-controls">
-            <button
-              className="sort-button"
-              onClick={() => handleSort("date")}
-            >
-              Sortuj po dacie {sortBy === "date" && (sortOrder === "asc" ? "↑" : "↓")}
+          <div className="sortControls">
+            <button className="sortButton" onClick={() => handleSort("date")}>
+              Sortuj po dacie{" "}
+              {sortBy === "date" && (sortOrder === "asc" ? "↑" : "↓")}
             </button>
-            <button
-              className="sort-button"
-              onClick={() => handleSort("status")}
-            >
-              Sortuj po statusie {sortBy === "status" && (sortOrder === "asc" ? "↑" : "↓")}
+            <button className="sortButton" onClick={() => handleSort("status")}>
+              Sortuj po statusie{" "}
+              {sortBy === "status" && (sortOrder === "asc" ? "↑" : "↓")}
             </button>
           </div>
-          <div className="lista-zadan">
-            <table>
+          <div className="listaZadanTableWrapper">
+            <table className="listaZadanTable">
               <thead>
                 <tr>
                   <th>Data</th>
@@ -94,24 +138,32 @@ const ListaZadan = () => {
                 </tr>
               </thead>
               <tbody>
-                {tasks.map((task) => (
+                {filteredTasks.map((task) => (
                   <tr
                     key={task.id}
                     onClick={() => handleRowClick(task.id)}
-                    className="task-row"
+                    className="taskRow"
                   >
                     <td data-label="Data">
-                      {new Date(task.date).toLocaleString("pl-PL", {
+                      {new Date(task.dueDate).toLocaleString("pl-PL", {
                         dateStyle: "short",
-                        timeStyle: "short",
                       })}
                     </td>
-                    <td data-label="Utworzone przez">{task.createdBy}</td>
-                    <td data-label="Odpowiedzialny">{task.assignedTo}</td>
+                    <td data-label="Utworzone przez">
+                      {task.createdBy?.name || "SYSTEM"}
+                    </td>
+                    <td data-label="Odpowiedzialny">
+                      {task.assignedTo?.name || task.role || "Nieprzypisane"}
+                    </td>
                     <td data-label="Tytuł">{task.title}</td>
                     <td data-label="Status">
-                      <span className={`status-tag status-${task.status.toLowerCase()}`}>
-                        {task.status}
+                      <span
+                        className={`statusTag status${task.status.replace(
+                          /\s/g,
+                          ""
+                        )}`}
+                      >
+                        {statusDisplayMap[task.status] || task.status}
                       </span>
                     </td>
                   </tr>

@@ -1,195 +1,225 @@
-.lista-zadan-container {
+.listaZadanContainer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f7fa; 
+  background-color: #f5f7fa;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 100vw;
+}
 
-  .main-content {
-    flex: 1;
-    padding: 1.5rem;
-    margin: 1.5rem;
-    margin-left: 250px; 
-    margin-top: 4.5rem;
-    max-width: calc(100% - 250px); 
-    color: #1a252f;
+.mainContent {
+  flex: 1;
+  padding: 1.5rem;
+  margin: 1.5rem;
+  margin-left: 250px;
+  margin-top: 4.5rem;
+  max-width: calc(100% - 270px);
+  color: #1a252f;
+  width: calc(100% - 270px - 3.5rem);
+  box-sizing: border-box;
+}
 
-    h2 {
-      margin-bottom: 1.5rem;
-      color: #2c3e50;
-      font-size: clamp(1.4rem, 3vw, 1.6rem);
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      text-align: left;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 0.5rem;
-    }
+.mainContent h2 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-size: clamp(1.4rem, 3vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-align: left;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
 
-    .sort-controls {
-      margin-bottom: 1.5rem;
-      display: flex;
-      gap: 1rem;
+.sortControls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
 
-      .sort-button {
-        padding: 0.75rem 1.25rem;
-        background-color: #3498db;
-        color: white;
-        border: none;
-        border-radius: 0.375rem;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+.sortButton {
+  padding: 0.75rem 1.25rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
 
-        &:hover {
-          background-color: #2980b9;
-          transform: scale(1.02);
-        }
-      }
-    }
+.sortButton:hover {
+  background-color: #2980b9;
+  transform: scale(1.02);
+}
 
-    .lista-zadan {
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #ffffff; 
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
+.listaZadanTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
 
-        th,
-        td {
-          padding: 14px 16px;
-          text-align: left;
-          border-bottom: 1px solid #e9ecef;
-          font-size: clamp(0.9rem, 2vw, 1rem);
-        }
+.listaZadanTable {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  table-layout: auto;
+}
 
-        th {
-          background-color: #3498db;
-          color: white;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.03em;
-        }
+.listaZadanTable th,
+.listaZadanTable td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  min-width: 120px;
+}
 
-        .task-row {
-          transition: background-color 0.3s, transform 0.2s ease-in-out;
-          cursor: pointer;
+.listaZadanTable th {
+  background-color: #3498db;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
 
-          &:hover {
-            background-color: #f5f7fa;
-            transform: translateY(-2px);
-          }
+.taskRow {
+  transition: background-color 0.3s, transform 0.2s ease-in-out;
+  cursor: pointer;
+}
 
-          td {
-            color: #34495e;
-            vertical-align: middle;
-          }
-        }
+.taskRow:hover {
+  background-color: #f5f7fa;
+  transform: translateY(-2px);
+}
 
-        .status-tag {
-          padding: 0.3rem 1rem;
-          border-radius: 999px;
-          font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-          font-weight: 600;
-          color: #fff;
-          display: inline-block;
-          transition: transform 0.2s ease-in-out;
+.taskRow td {
+  color: #34495e;
+  vertical-align: middle;
+}
 
-          &.status-oczekuje {
-            background-color: #e67e22;
-          }
+.statusTag {
+  padding: 0.3rem 1rem;
+  border-radius: 999px;
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
 
-          &.status-zakończona {
-            background-color: #2ecc71;
-          }
+.statusTag.statusOczekuje {
+  background-color: #e67e22;
+}
 
-          &:hover {
-            transform: scale(1.03);
-          }
-        }
+.statusTag.statusWTrakcie {
+  background-color: #3498db;
+}
 
-        @media (max-width: 768px) {
-          thead {
-            display: none;
-          }
+.statusTag.statusZakonczona {
+  background-color: #2ecc71;
+}
 
-          .task-row {
-            display: block;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e9ecef;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: 0.5rem;
-            transition: transform 0.2s ease-in-out;
+.statusTag.statusAnulowana {
+  background-color: #e74c3c;
+}
 
-            &:hover {
-              transform: translateY(-2px);
-            }
-          }
+.statusTag.statusArchived {
+  background-color: #7f8c8d;
+}
 
-          td {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-align: right;
-            padding: 8px 12px;
-            position: relative;
-            border-bottom: 1px solid #f1f3f5;
+.statusTag:hover {
+  transform: scale(1.03);
+}
 
-            &:before {
-              content: attr(data-label);
-              font-weight: 600;
-              color: #2c3e50;
-              width: 40%;
-              text-align: left;
-            }
-
-            &:last-child {
-              border-bottom: none;
-            }
-          }
-        }
-      }
-    }
+@media (max-width: 768px) {
+  .listaZadanTable {
+    width: 100%;
   }
 
-  @media (min-width: 1200px) {
-    .main-content {
-      margin-left: 270px; 
-      max-width: calc(100% - 270px); 
-      padding: 1.75rem;
-    }
+  .listaZadanTable thead {
+    display: none;
   }
 
-  @media (max-width: 1199px) and (min-width: 992px) {
-    .main-content {
-      margin-left: 240px;
-      max-width: calc(100% - 240px);
-      padding: 1.25rem;
-    }
+  .taskRow {
+    display: block;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+    transition: transform 0.2s ease-in-out;
   }
 
-  @media (max-width: 991px) {
-    .main-content {
-      margin-left: 1rem;
-      max-width: calc(100% - 2rem);
-      margin-top: 3.5rem;
-      padding: 0.75rem;
-    }
+  .taskRow:hover {
+    transform: translateY(-2px);
   }
 
-  @media (max-width: 576px) {
-    .main-content {
-      margin: 0.5rem;
-      padding: 0.5rem;
-      margin-top: 3rem;
+  .listaZadanTable td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 8px 12px;
+    position: relative;
+    border-bottom: 1px solid #f1f3f5;
+  }
 
-      h2 {
-        font-size: clamp(1.2rem, 2.5vw, 1.4rem);
-      }
-    }
+  .listaZadanTable td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #2c3e50;
+    width: 40%;
+    text-align: left;
+  }
+
+  .listaZadanTable td:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mainContent {
+    margin-left: 270px;
+    max-width: calc(100% - 270px);
+    width: calc(100% - 270px - 3.5rem);
+    padding: 1.75rem;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .mainContent {
+    margin-left: 240px;
+    max-width: calc(100% - 240px);
+    width: calc(100% - 240px - 2.5rem);
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .mainContent {
+    margin-left: 1rem;
+    max-width: calc(100% - 2rem);
+    width: calc(100% - 2rem);
+    margin-top: 3.5rem;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .mainContent {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 3rem;
+    width: calc(100% - 1rem);
+  }
+
+  .mainContent h2 {
+    font-size: clamp(1.2rem, 2.5vw, 1.4rem);
   }
 }
